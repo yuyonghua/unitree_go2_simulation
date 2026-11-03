@@ -1,0 +1,6 @@
+sport_translator:
+  ros__parameters:
+    max_vx: 0.26        # 与 nav2_l1.yaml 对齐，真机先保守
+    max_vy: 0.20        # 独立横向限幅
+    max_vyaw: 1.0
+    republish_rate: 10.0  # Move 重发频率；若实测单次有效可调小

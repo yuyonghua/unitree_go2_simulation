@@ -1,0 +1,7 @@
+# RobotBehaviorCommand.srv
+# 行为指令: [sit, up, walk]
+string command
+---
+# 执行结果
+bool success
+string message

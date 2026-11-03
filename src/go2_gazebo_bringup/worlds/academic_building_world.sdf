@@ -1,0 +1,2799 @@
+<?xml version='1.0' encoding='ASCII'?>
+<sdf version='1.7'>
+  <world name='academic_building_world'>
+    <physics name='1ms' type='ignored'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Gazebo Harmonic Core System Plugins -->
+    <plugin filename='gz-sim-sensors-system' name='gz::sim::systems::Sensors'>
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename='gz-sim-physics-system' name='gz::sim::systems::Physics'/>
+    <plugin filename='gz-sim-user-commands-system' name='gz::sim::systems::UserCommands'/>
+    <plugin filename='gz-sim-scene-broadcaster-system' name='gz::sim::systems::SceneBroadcaster'/>
+    <plugin filename='gz-sim-imu-system' name='gz::sim::systems::Imu'/>
+
+    <!-- Sunlight & Natural Skylights -->
+    <light type='directional' name='sun'>
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 25 0 0 0</pose>
+      <diffuse>0.92 0.92 0.92 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation><range>1000</range><constant>0.9</constant><linear>0.01</linear><quadratic>0.001</quadratic></attenuation>
+      <direction>-0.35 0.35 -0.9</direction>
+    </light>
+    <light type='directional' name='skylight_fill'>
+      <cast_shadows>false</cast_shadows>
+      <pose>-10 0 20 0 0 0</pose>
+      <diffuse>0.55 0.55 0.58 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>0.25 -0.25 -0.85</direction>
+    </light>
+
+    <!-- ========================================================================= -->
+    <!-- 1. 1F & 2F Floor Slabs (Zero Z-Fighting, Top at z = 0.000m / z = 3.200m) -->
+    <!-- ========================================================================= -->
+    <!-- Textured Box: slab_outdoor_plaza -->
+    <model name='slab_outdoor_plaza'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>5.000 8.000 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>5.000 8.000 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-25.500 0.000 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: slab_1f_atrium_floor -->
+    <model name='slab_1f_atrium_floor'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>12.400 5.600 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>12.400 5.600 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-16.700 4.500 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: slab_1f_corridor -->
+    <model name='slab_1f_corridor'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>40.800 3.400 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>40.800 3.400 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-2.500 0.000 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: slab_1f_west_lab -->
+    <model name='slab_1f_west_lab'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>12.800 6.800 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>12.800 6.800 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/blue_linoleum.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-16.500 -5.100 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: slab_1f_mid_room -->
+    <model name='slab_1f_mid_room'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>17.400 6.800 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>17.400 6.800 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/blue_linoleum.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-1.200 -5.100 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: slab_1f_east_office -->
+    <model name='slab_1f_east_office'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>10.400 6.800 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>10.400 6.800 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/blue_linoleum.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>12.700 -5.100 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: slab_2f_corridor_walkway -->
+    <model name='slab_2f_corridor_walkway'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>30.400 1.700 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>30.400 1.700 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://aws_robomaker_residential_FloorB_01/materials/textures/aws_FloorB_01.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>2.700 0.850 3.150 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: slab_2f_advisor_office -->
+    <model name='slab_2f_advisor_office'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>8.000 5.800 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>8.000 5.800 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://aws_robomaker_residential_FloorB_01/materials/textures/aws_FloorB_01.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 -4.600 3.150 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: slab_2f_advisor_bridge -->
+    <model name='slab_2f_advisor_bridge'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.400 1.700 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.400 1.700 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://aws_robomaker_residential_FloorB_01/materials/textures/aws_FloorB_01.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 -0.850 3.150 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: railing_2f_bridge_w -->
+    <model name='railing_2f_bridge_w'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.060 1.700 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.060 1.700 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-0.700 -0.850 3.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: railing_2f_bridge_e -->
+    <model name='railing_2f_bridge_e'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.060 1.700 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.060 1.700 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.700 -0.850 3.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: railing_2f_west_void -->
+    <model name='railing_2f_west_void'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>11.800 0.060 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>11.800 0.060 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-6.600 0.000 3.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: railing_2f_east_void -->
+    <model name='railing_2f_east_void'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>17.200 0.060 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>17.200 0.060 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>9.300 0.000 3.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: railing_2f_atrium_edge -->
+    <model name='railing_2f_atrium_edge'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.060 1.700 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.060 1.700 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-12.500 0.850 3.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 2. Staircase Systems: Clean Slopes & Open Mezzanine Platform              -->
+    <!-- ========================================================================= -->
+    <!-- Stair 1: West Multi-Angle Ramp Gallery & Open Mezzanine Terrace -->
+    <!-- Textured Box: stair1_platform_1f5 -->
+    <model name='stair1_platform_1f5'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>2.000 5.600 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>2.000 5.600 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-11.500 4.500 0.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair1_platform_railing_s -->
+    <model name='stair1_platform_railing_s'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>2.000 0.060 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>2.000 0.060 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-11.500 1.700 2.100 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Composite Model: stair1_ramp_12deg_complex (Unified for easy single-click XYZ translation) -->
+    <model name='stair1_ramp_12deg_complex'>
+      <static>true</static>
+      <pose>-16.250 2.350 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='surface_collision'>
+          <pose>0.000 0.000 0.800 0.0000 -0.2102 0.0000</pose>
+          <geometry><box><size>7.670 1.100 0.050</size></box></geometry>
+          <surface><friction><ode><mu>1.3</mu><mu2>1.3</mu2></ode></friction></surface>
+        </collision>
+        <visual name='surface_visual'>
+          <pose>0.000 0.000 0.800 0.0000 -0.2102 0.0000</pose>
+          <geometry><box><size>7.670 1.100 0.050</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Composite Model: stair1_ramp_18deg_complex (Unified for easy single-click XYZ translation) -->
+    <model name='stair1_ramp_18deg_complex'>
+      <static>true</static>
+      <pose>-15.000 3.550 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='surface_collision'>
+          <pose>0.000 0.000 0.800 0.0000 -0.3097 0.0000</pose>
+          <geometry><box><size>5.250 1.100 0.050</size></box></geometry>
+          <surface><friction><ode><mu>1.3</mu><mu2>1.3</mu2></ode></friction></surface>
+        </collision>
+        <visual name='surface_visual'>
+          <pose>0.000 0.000 0.800 0.0000 -0.3097 0.0000</pose>
+          <geometry><box><size>5.250 1.100 0.050</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Composite Model: stair1_ramp_24deg_complex (Unified for easy single-click XYZ translation) -->
+    <model name='stair1_ramp_24deg_complex'>
+      <static>true</static>
+      <pose>-14.300 4.750 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='surface_collision'>
+          <pose>0.000 0.000 0.800 0.0000 -0.4182 0.0000</pose>
+          <geometry><box><size>3.940 1.100 0.050</size></box></geometry>
+          <surface><friction><ode><mu>1.3</mu><mu2>1.3</mu2></ode></friction></surface>
+        </collision>
+        <visual name='surface_visual'>
+          <pose>0.000 0.000 0.800 0.0000 -0.4182 0.0000</pose>
+          <geometry><box><size>3.940 1.100 0.050</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Composite Model: stair1_f1_steps (Unified for easy single-click XYZ translation) -->
+    <model name='stair1_f1_steps'>
+      <static>true</static>
+      <pose>-18.200 6.100 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='step_1_collision'>
+          <pose>0.000 0.000 0.080 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.160</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_1_visual'>
+          <pose>0.000 0.000 0.080 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.160</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_2_collision'>
+          <pose>0.600 0.000 0.160 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.320</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_2_visual'>
+          <pose>0.600 0.000 0.160 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.320</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_3_collision'>
+          <pose>1.200 0.000 0.240 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.480</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_3_visual'>
+          <pose>1.200 0.000 0.240 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.480</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_4_collision'>
+          <pose>1.800 0.000 0.320 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.640</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_4_visual'>
+          <pose>1.800 0.000 0.320 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.640</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_5_collision'>
+          <pose>2.400 0.000 0.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.800</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_5_visual'>
+          <pose>2.400 0.000 0.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.800</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_6_collision'>
+          <pose>3.000 0.000 0.480 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.960</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_6_visual'>
+          <pose>3.000 0.000 0.480 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 0.960</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_7_collision'>
+          <pose>3.600 0.000 0.560 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 1.120</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_7_visual'>
+          <pose>3.600 0.000 0.560 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 1.120</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_8_collision'>
+          <pose>4.200 0.000 0.640 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 1.280</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_8_visual'>
+          <pose>4.200 0.000 0.640 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 1.280</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_9_collision'>
+          <pose>4.800 0.000 0.720 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 1.440</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_9_visual'>
+          <pose>4.800 0.000 0.720 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 1.440</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_10_collision'>
+          <pose>5.400 0.000 0.800 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_10_visual'>
+          <pose>5.400 0.000 0.800 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>0.600 1.400 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Perfectly Aligned Open Stairwell: stair2_standard at cx=-9.00m -->
+    <!-- Textured Box: stair2_standard_floor_1f -->
+    <model name='stair2_standard_floor_1f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 5.800 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 5.800 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-9.000 4.600 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_wall_w_low -->
+    <model name='stair2_standard_wall_w_low'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 5.800 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 5.800 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-10.500 4.600 0.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_wall_w_high -->
+    <model name='stair2_standard_wall_w_high'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 5.800 2.800</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 5.800 2.800</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-10.500 4.600 5.000 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_wall_w_col_s -->
+    <model name='stair2_standard_wall_w_col_s'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 4.000 2.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 4.000 2.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-10.500 3.700 2.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_wall_e -->
+    <model name='stair2_standard_wall_e'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 5.800 6.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 5.800 6.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-7.500 4.600 3.200 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_wall_n -->
+    <model name='stair2_standard_wall_n'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.200 0.200 6.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.200 0.200 6.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-9.000 7.400 3.200 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_front_col_w -->
+    <model name='stair2_standard_front_col_w'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-10.400 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_front_col_mid -->
+    <model name='stair2_standard_front_col_mid'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.400 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.400 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-9.000 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_front_col_e -->
+    <model name='stair2_standard_front_col_e'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-7.600 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_door_lintel_1f -->
+    <model name='stair2_standard_door_lintel_1f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-9.000 1.700 2.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_door_lintel_2f -->
+    <model name='stair2_standard_door_lintel_2f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-9.000 1.700 5.900 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair2_standard_landing -->
+    <model name='stair2_standard_landing'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>2.800 1.600 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>2.800 1.600 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-9.000 6.500 0.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Composite Model: stair2_standard_f1_steps (Unified for easy single-click XYZ translation) -->
+    <model name='stair2_standard_f1_steps'>
+      <static>true</static>
+      <pose>-9.750 2.900 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='step_1_collision'>
+          <pose>0.000 0.140 0.080 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.160</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_1_visual'>
+          <pose>0.000 0.140 0.080 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.160</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_2_collision'>
+          <pose>0.000 0.420 0.160 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.320</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_2_visual'>
+          <pose>0.000 0.420 0.160 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.320</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_3_collision'>
+          <pose>0.000 0.700 0.240 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.480</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_3_visual'>
+          <pose>0.000 0.700 0.240 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.480</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_4_collision'>
+          <pose>0.000 0.980 0.320 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.640</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_4_visual'>
+          <pose>0.000 0.980 0.320 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.640</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_5_collision'>
+          <pose>0.000 1.260 0.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.800</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_5_visual'>
+          <pose>0.000 1.260 0.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.800</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_6_collision'>
+          <pose>0.000 1.540 0.480 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.960</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_6_visual'>
+          <pose>0.000 1.540 0.480 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.960</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_7_collision'>
+          <pose>0.000 1.820 0.560 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.120</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_7_visual'>
+          <pose>0.000 1.820 0.560 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.120</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_8_collision'>
+          <pose>0.000 2.100 0.640 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.280</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_8_visual'>
+          <pose>0.000 2.100 0.640 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.280</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_9_collision'>
+          <pose>0.000 2.380 0.720 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.440</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_9_visual'>
+          <pose>0.000 2.380 0.720 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.440</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_10_collision'>
+          <pose>0.000 2.660 0.800 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_10_visual'>
+          <pose>0.000 2.660 0.800 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Composite Model: stair2_standard_f2_steps (Unified for easy single-click XYZ translation) -->
+    <model name='stair2_standard_f2_steps'>
+      <static>true</static>
+      <pose>-8.250 2.900 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='step_1_collision'>
+          <pose>0.000 2.660 0.880 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.760</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_1_visual'>
+          <pose>0.000 2.660 0.880 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.760</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_2_collision'>
+          <pose>0.000 2.380 0.960 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.920</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_2_visual'>
+          <pose>0.000 2.380 0.960 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.920</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_3_collision'>
+          <pose>0.000 2.100 1.040 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.080</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_3_visual'>
+          <pose>0.000 2.100 1.040 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.080</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_4_collision'>
+          <pose>0.000 1.820 1.120 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.240</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_4_visual'>
+          <pose>0.000 1.820 1.120 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.240</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_5_collision'>
+          <pose>0.000 1.540 1.200 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_5_visual'>
+          <pose>0.000 1.540 1.200 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_6_collision'>
+          <pose>0.000 1.260 1.280 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.560</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_6_visual'>
+          <pose>0.000 1.260 1.280 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.560</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_7_collision'>
+          <pose>0.000 0.980 1.360 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.720</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_7_visual'>
+          <pose>0.000 0.980 1.360 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.720</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_8_collision'>
+          <pose>0.000 0.700 1.440 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.880</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_8_visual'>
+          <pose>0.000 0.700 1.440 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.880</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_9_collision'>
+          <pose>0.000 0.420 1.520 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 3.040</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_9_visual'>
+          <pose>0.000 0.420 1.520 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 3.040</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_10_collision'>
+          <pose>0.000 0.140 1.600 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_10_visual'>
+          <pose>0.000 0.140 1.600 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Textured Box: stair2_standard_2f_exit_slab -->
+    <model name='stair2_standard_2f_exit_slab'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.300 1.200 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.300 1.200 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://aws_robomaker_residential_FloorB_01/materials/textures/aws_FloorB_01.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-8.250 2.300 3.150 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Perfectly Aligned Open Stairwell: stair3_lowrise at cx=0.00m -->
+    <!-- Textured Box: stair3_lowrise_floor_1f -->
+    <model name='stair3_lowrise_floor_1f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 6.360 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 6.360 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 4.880 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_wall_w -->
+    <model name='stair3_lowrise_wall_w'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 6.360 6.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 6.360 6.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-1.500 4.880 3.200 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_wall_e -->
+    <model name='stair3_lowrise_wall_e'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 6.360 6.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 6.360 6.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>1.500 4.880 3.200 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_wall_n -->
+    <model name='stair3_lowrise_wall_n'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.200 0.200 6.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.200 0.200 6.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 7.960 3.200 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_front_col_w -->
+    <model name='stair3_lowrise_front_col_w'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-1.400 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_front_col_mid -->
+    <model name='stair3_lowrise_front_col_mid'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.400 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.400 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_front_col_e -->
+    <model name='stair3_lowrise_front_col_e'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>1.400 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_door_lintel_1f -->
+    <model name='stair3_lowrise_door_lintel_1f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 1.700 2.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_door_lintel_2f -->
+    <model name='stair3_lowrise_door_lintel_2f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 1.700 5.900 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_landing -->
+    <model name='stair3_lowrise_landing'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>2.800 1.600 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>2.800 1.600 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 7.060 0.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Composite Model: stair3_lowrise_f1_steps (Unified for easy single-click XYZ translation) -->
+    <model name='stair3_lowrise_f1_steps'>
+      <static>true</static>
+      <pose>-0.750 2.900 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='step_1_collision'>
+          <pose>0.000 0.120 0.057 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.114</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_1_visual'>
+          <pose>0.000 0.120 0.057 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.114</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_2_collision'>
+          <pose>0.000 0.360 0.114 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.229</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_2_visual'>
+          <pose>0.000 0.360 0.114 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.229</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_3_collision'>
+          <pose>0.000 0.600 0.171 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.343</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_3_visual'>
+          <pose>0.000 0.600 0.171 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.343</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_4_collision'>
+          <pose>0.000 0.840 0.229 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.457</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_4_visual'>
+          <pose>0.000 0.840 0.229 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.457</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_5_collision'>
+          <pose>0.000 1.080 0.286 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.571</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_5_visual'>
+          <pose>0.000 1.080 0.286 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.571</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_6_collision'>
+          <pose>0.000 1.320 0.343 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.686</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_6_visual'>
+          <pose>0.000 1.320 0.343 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.686</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_7_collision'>
+          <pose>0.000 1.560 0.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.800</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_7_visual'>
+          <pose>0.000 1.560 0.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.800</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_8_collision'>
+          <pose>0.000 1.800 0.457 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.914</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_8_visual'>
+          <pose>0.000 1.800 0.457 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 0.914</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_9_collision'>
+          <pose>0.000 2.040 0.514 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.029</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_9_visual'>
+          <pose>0.000 2.040 0.514 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.029</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_10_collision'>
+          <pose>0.000 2.280 0.571 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.143</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_10_visual'>
+          <pose>0.000 2.280 0.571 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.143</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_11_collision'>
+          <pose>0.000 2.520 0.629 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.257</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_11_visual'>
+          <pose>0.000 2.520 0.629 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.257</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_12_collision'>
+          <pose>0.000 2.760 0.686 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.371</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_12_visual'>
+          <pose>0.000 2.760 0.686 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.371</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_13_collision'>
+          <pose>0.000 3.000 0.743 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.486</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_13_visual'>
+          <pose>0.000 3.000 0.743 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.486</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_14_collision'>
+          <pose>0.000 3.240 0.800 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_14_visual'>
+          <pose>0.000 3.240 0.800 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Composite Model: stair3_lowrise_f2_steps (Unified for easy single-click XYZ translation) -->
+    <model name='stair3_lowrise_f2_steps'>
+      <static>true</static>
+      <pose>0.750 2.900 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='step_1_collision'>
+          <pose>0.000 3.240 0.857 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.714</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_1_visual'>
+          <pose>0.000 3.240 0.857 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.714</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_2_collision'>
+          <pose>0.000 3.000 0.914 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.829</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_2_visual'>
+          <pose>0.000 3.000 0.914 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.829</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_3_collision'>
+          <pose>0.000 2.760 0.971 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.943</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_3_visual'>
+          <pose>0.000 2.760 0.971 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 1.943</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_4_collision'>
+          <pose>0.000 2.520 1.029 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.057</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_4_visual'>
+          <pose>0.000 2.520 1.029 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.057</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_5_collision'>
+          <pose>0.000 2.280 1.086 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.171</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_5_visual'>
+          <pose>0.000 2.280 1.086 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.171</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_6_collision'>
+          <pose>0.000 2.040 1.143 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.286</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_6_visual'>
+          <pose>0.000 2.040 1.143 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.286</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_7_collision'>
+          <pose>0.000 1.800 1.200 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_7_visual'>
+          <pose>0.000 1.800 1.200 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_8_collision'>
+          <pose>0.000 1.560 1.257 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.514</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_8_visual'>
+          <pose>0.000 1.560 1.257 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.514</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_9_collision'>
+          <pose>0.000 1.320 1.314 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.629</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_9_visual'>
+          <pose>0.000 1.320 1.314 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.629</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_10_collision'>
+          <pose>0.000 1.080 1.371 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.743</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_10_visual'>
+          <pose>0.000 1.080 1.371 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.743</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_11_collision'>
+          <pose>0.000 0.840 1.429 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.857</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_11_visual'>
+          <pose>0.000 0.840 1.429 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.857</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_12_collision'>
+          <pose>0.000 0.600 1.486 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.971</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_12_visual'>
+          <pose>0.000 0.600 1.486 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 2.971</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_13_collision'>
+          <pose>0.000 0.360 1.543 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 3.086</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_13_visual'>
+          <pose>0.000 0.360 1.543 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 3.086</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_14_collision'>
+          <pose>0.000 0.120 1.600 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_14_visual'>
+          <pose>0.000 0.120 1.600 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.240 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Textured Box: stair3_lowrise_2f_exit_slab -->
+    <model name='stair3_lowrise_2f_exit_slab'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.300 1.200 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.300 1.200 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://aws_robomaker_residential_FloorB_01/materials/textures/aws_FloorB_01.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.750 2.300 3.150 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Perfectly Aligned Open Stairwell: stair4_steep at cx=11.50m -->
+    <!-- Textured Box: stair4_steep_floor_1f -->
+    <model name='stair4_steep_floor_1f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 5.240 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 5.240 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>11.500 4.320 -0.050 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_wall_w -->
+    <model name='stair4_steep_wall_w'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 5.240 6.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 5.240 6.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>10.000 4.320 3.200 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_wall_e -->
+    <model name='stair4_steep_wall_e'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 5.240 6.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 5.240 6.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>13.000 4.320 3.200 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_wall_n -->
+    <model name='stair4_steep_wall_n'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.200 0.200 6.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.200 0.200 6.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>11.500 6.840 3.200 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_front_col_w -->
+    <model name='stair4_steep_front_col_w'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>10.100 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_front_col_mid -->
+    <model name='stair4_steep_front_col_mid'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.400 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.400 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>11.500 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_front_col_e -->
+    <model name='stair4_steep_front_col_e'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>12.900 1.700 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_door_lintel_1f -->
+    <model name='stair4_steep_door_lintel_1f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>11.500 1.700 2.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_door_lintel_2f -->
+    <model name='stair4_steep_door_lintel_2f'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.000 0.200 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>11.500 1.700 5.900 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: stair4_steep_landing -->
+    <model name='stair4_steep_landing'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>2.800 1.600 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>2.800 1.600 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/concrete2.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>11.500 5.940 0.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Composite Model: stair4_steep_f1_steps (Unified for easy single-click XYZ translation) -->
+    <model name='stair4_steep_f1_steps'>
+      <static>true</static>
+      <pose>10.750 2.900 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='step_1_collision'>
+          <pose>0.000 0.140 0.100 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_1_visual'>
+          <pose>0.000 0.140 0.100 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_2_collision'>
+          <pose>0.000 0.420 0.200 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_2_visual'>
+          <pose>0.000 0.420 0.200 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_3_collision'>
+          <pose>0.000 0.700 0.300 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_3_visual'>
+          <pose>0.000 0.700 0.300 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_4_collision'>
+          <pose>0.000 0.980 0.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.800</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_4_visual'>
+          <pose>0.000 0.980 0.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 0.800</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_5_collision'>
+          <pose>0.000 1.260 0.500 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_5_visual'>
+          <pose>0.000 1.260 0.500 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_6_collision'>
+          <pose>0.000 1.540 0.600 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_6_visual'>
+          <pose>0.000 1.540 0.600 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_7_collision'>
+          <pose>0.000 1.820 0.700 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_7_visual'>
+          <pose>0.000 1.820 0.700 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_8_collision'>
+          <pose>0.000 2.100 0.800 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_8_visual'>
+          <pose>0.000 2.100 0.800 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Composite Model: stair4_steep_f2_steps (Unified for easy single-click XYZ translation) -->
+    <model name='stair4_steep_f2_steps'>
+      <static>true</static>
+      <pose>12.250 2.900 0.000 0 0 0</pose>
+      <link name='link'>
+        <collision name='step_1_collision'>
+          <pose>0.000 2.100 0.900 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.800</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_1_visual'>
+          <pose>0.000 2.100 0.900 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 1.800</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_2_collision'>
+          <pose>0.000 1.820 1.000 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_2_visual'>
+          <pose>0.000 1.820 1.000 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_3_collision'>
+          <pose>0.000 1.540 1.100 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_3_visual'>
+          <pose>0.000 1.540 1.100 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_4_collision'>
+          <pose>0.000 1.260 1.200 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.400</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_4_visual'>
+          <pose>0.000 1.260 1.200 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.400</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_5_collision'>
+          <pose>0.000 0.980 1.300 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.600</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_5_visual'>
+          <pose>0.000 0.980 1.300 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.600</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_6_collision'>
+          <pose>0.000 0.700 1.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.800</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_6_visual'>
+          <pose>0.000 0.700 1.400 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 2.800</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_7_collision'>
+          <pose>0.000 0.420 1.500 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 3.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_7_visual'>
+          <pose>0.000 0.420 1.500 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 3.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+        <collision name='step_8_collision'>
+          <pose>0.000 0.140 1.600 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_8_visual'>
+          <pose>0.000 0.140 1.600 0.0000 0.0000 0.0000</pose>
+          <geometry><box><size>1.300 0.280 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Textured Box: stair4_steep_2f_exit_slab -->
+    <model name='stair4_steep_2f_exit_slab'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.300 1.200 0.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.300 1.200 0.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://aws_robomaker_residential_FloorB_01/materials/textures/aws_FloorB_01.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>12.250 2.300 3.150 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 3. Building Perimeter Walls & Room Partitions                             -->
+    <!-- ========================================================================= -->
+    <!-- Textured Box: wall_ext_south -->
+    <model name='wall_ext_south'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>41.000 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>41.000 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-2.500 -8.600 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_ext_east -->
+    <model name='wall_ext_east'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 10.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 10.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>18.000 -3.400 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_ext_west_s -->
+    <model name='wall_ext_west_s'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 7.300 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 7.300 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-23.000 -4.850 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_ext_west_n -->
+    <model name='wall_ext_west_n'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 6.100 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 6.100 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-23.000 4.250 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: door_lintel_main_entrance -->
+    <model name='door_lintel_main_entrance'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 2.400 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 2.400 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-23.000 0.000 2.700 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_stair1_north -->
+    <model name='wall_stair1_north'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>12.500 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>12.500 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-16.750 7.400 1.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_1f_north_seg1 -->
+    <model name='wall_1f_north_seg1'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>6.000 0.200 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>6.000 0.200 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-4.500 1.700 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_1f_north_seg2 -->
+    <model name='wall_1f_north_seg2'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>8.500 0.200 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>8.500 0.200 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>5.750 1.700 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_1f_north_seg3 -->
+    <model name='wall_1f_north_seg3'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>5.000 0.200 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>5.000 0.200 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>15.500 1.700 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_div_room_w1 -->
+    <model name='wall_div_room_w1'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>9.900 0.200 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>9.900 0.200 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-17.950 -1.700 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: door_lintel_west_lab -->
+    <model name='door_lintel_west_lab'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.100 0.200 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.100 0.200 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-12.450 -1.700 2.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_div_room_w2 -->
+    <model name='wall_div_room_w2'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.900 0.200 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.900 0.200 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-10.950 -1.700 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_div_room_mid -->
+    <model name='wall_div_room_mid'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>17.400 0.200 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>17.400 0.200 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-1.200 -1.700 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_div_room_e1 -->
+    <model name='wall_div_room_e1'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.700 0.200 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.700 0.200 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>9.350 -1.700 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: door_lintel_east_office -->
+    <model name='door_lintel_east_office'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.100 0.200 1.000</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.100 0.200 1.000</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>11.750 -1.700 2.600 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_div_room_e2 -->
+    <model name='wall_div_room_e2'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>5.600 0.200 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>5.600 0.200 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>15.100 -1.700 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_partition_west_mid -->
+    <model name='wall_partition_west_mid'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 6.800 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 6.800 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-10.000 -5.100 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_partition_mid_east -->
+    <model name='wall_partition_mid_east'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 6.800 3.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 6.800 3.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>7.500 -5.100 1.550 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_2f_advisor_s -->
+    <model name='wall_2f_advisor_s'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>8.000 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>8.000 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 -7.500 4.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_2f_advisor_w -->
+    <model name='wall_2f_advisor_w'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 5.800 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 5.800 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-4.000 -4.600 4.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_2f_advisor_e -->
+    <model name='wall_2f_advisor_e'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.200 5.800 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.200 5.800 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>4.000 -4.600 4.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_2f_advisor_n_l -->
+    <model name='wall_2f_advisor_n_l'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.100 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.100 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-2.350 -1.700 4.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: wall_2f_advisor_n_r -->
+    <model name='wall_2f_advisor_n_r'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>3.100 0.200 3.200</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>3.100 0.200 3.200</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>2.350 -1.700 4.800 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: door_lintel_advisor -->
+    <model name='door_lintel_advisor'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.600 0.200 1.100</size></box></geometry>
+          <surface><friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.600 0.200 1.100</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/wall_white.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 -1.700 5.850 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 4. Subtle Obstacle Challenges (Thresholds & Cable Protectors)              -->
+    <!-- ========================================================================= -->
+    <!-- Textured Box: obstacle_threshold_west_lab -->
+    <model name='obstacle_threshold_west_lab'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.100 0.140 0.035</size></box></geometry>
+          <surface><friction><ode><mu>1.4</mu><mu2>1.4</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.100 0.140 0.035</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-12.450 -1.700 0.018 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: obstacle_cable_ramp_protector -->
+    <model name='obstacle_cable_ramp_protector'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>0.160 2.600 0.040</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>0.160 2.600 0.040</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>-3.000 0.000 0.020 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: obstacle_threshold_east_office -->
+    <model name='obstacle_threshold_east_office'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.100 0.140 0.035</size></box></geometry>
+          <surface><friction><ode><mu>1.4</mu><mu2>1.4</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.100 0.140 0.035</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>11.750 -1.700 0.018 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- Textured Box: obstacle_threshold_advisor_office -->
+    <model name='obstacle_threshold_advisor_office'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry><box><size>1.200 0.140 0.035</size></box></geometry>
+          <surface><friction><ode><mu>1.4</mu><mu2>1.4</mu2></ode></friction></surface>
+        </collision>
+        <visual name='visual'>
+          <geometry><box><size>1.200 0.140 0.035</size></box></geometry>
+          <material>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr><metal><albedo_map>model://christman_L1/meshes/default.png</albedo_map><roughness>0.5</roughness><metalness>0.0</metalness></metal></pbr>
+          </material>
+        </visual>
+      </link>
+      <pose>0.000 -1.700 3.217 0.0000 0.0000 0.0000</pose>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 5. Enriched Realistic Office & Lab Interiors (100% Anti-Clipping Poses)    -->
+    <!-- ========================================================================= -->
+    <include>
+      <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+      <name>west_lab_desk_1</name>
+      <pose>-20.200 -3.200 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>west_lab_chair_1</name>
+      <pose>-19.500 -3.200 0.000 0.0000 0.0000 3.1416</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+      <name>west_lab_desk_2</name>
+      <pose>-20.200 -6.800 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>west_lab_chair_2</name>
+      <pose>-19.500 -6.800 0.000 0.0000 0.0000 3.1416</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+      <name>west_lab_bench_main</name>
+      <pose>-12.000 -6.500 0.000 0.0000 0.0000 1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>west_lab_bench_chair</name>
+      <pose>-12.000 -5.700 0.000 0.0000 0.0000 -1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_ShelfD_01</uri>
+      <name>west_lab_shelf_parts</name>
+      <pose>-10.500 -5.000 0.000 0.0000 0.0000 1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://cardboard_box</uri>
+      <name>west_lab_box_1</name>
+      <pose>-20.200 -7.800 0.150 0.0000 0.0000 0.2000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://cardboard_box</uri>
+      <name>west_lab_box_2</name>
+      <pose>-19.600 -8.000 0.150 0.0000 0.0000 -0.3000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
+      <name>west_lab_trash_can</name>
+      <pose>-14.500 -2.300 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://cafe_table</uri>
+      <name>east_office_table</name>
+      <pose>12.500 -5.000 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>east_office_chair_1</name>
+      <pose>12.500 -4.100 0.000 0.0000 0.0000 1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>east_office_chair_2</name>
+      <pose>12.500 -5.900 0.000 0.0000 0.0000 -1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>east_office_chair_3</name>
+      <pose>11.600 -5.000 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>east_office_chair_4</name>
+      <pose>13.400 -5.000 0.000 0.0000 0.0000 3.1416</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_SofaB_01</uri>
+      <name>east_office_sofa</name>
+      <pose>8.400 -6.500 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_CoffeeTable_01</uri>
+      <name>east_office_coffee_table</name>
+      <pose>8.400 -5.300 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <name>east_office_cabinet</name>
+      <pose>17.200 -4.500 0.000 0.0000 0.0000 -1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
+      <name>east_office_trash</name>
+      <pose>12.800 -2.300 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
+      <name>corridor_trash_can_1</name>
+      <pose>-5.500 1.200 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
+      <name>corridor_trash_can_2</name>
+      <pose>6.500 1.200 0.000 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+      <name>advisor_desk_main</name>
+      <pose>0.000 -6.200 3.200 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>advisor_chair_main</name>
+      <pose>0.000 -6.900 3.200 0.0000 0.0000 1.5708</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_SofaB_01</uri>
+      <name>advisor_sofa_double</name>
+      <pose>-2.600 -4.500 3.200 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_CoffeeTable_01</uri>
+      <name>advisor_coffee_table</name>
+      <pose>-2.600 -3.300 3.200 0.0000 0.0000 0.0000</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_residential_ChairA_01</uri>
+      <name>advisor_sofa_single</name>
+      <pose>-1.400 -4.500 3.200 0.0000 0.0000 3.1416</pose>
+      <static>true</static>
+    </include>
+    <include>
+      <uri>model://aws_robomaker_warehouse_ShelfE_01</uri>
+      <name>advisor_bookshelf</name>
+      <pose>3.400 -5.000 3.200 0.0000 0.0000 -1.5708</pose>
+      <static>true</static>
+    </include>
+  </world>
+</sdf>

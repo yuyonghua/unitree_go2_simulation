@@ -1,0 +1,551 @@
+<?xml version='1.0' encoding='ASCII'?>
+<sdf version='1.7'>
+  <world name='benchmark_calibration_world'>
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Gazebo Harmonic Core System Plugins -->
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+
+    <!-- Global Sunlight and Soft Diffuse Skylight -->
+    <light type='directional' name='sun'>
+      <cast_shadows>true</cast_shadows>
+      <pose>5 0 25 0 0 0</pose>
+      <diffuse>0.92 0.92 0.92 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.35 0.25 -0.9</direction>
+    </light>
+    <light type='directional' name='skylight_fill'>
+      <cast_shadows>false</cast_shadows>
+      <pose>-5 5 20 0 0 0</pose>
+      <diffuse>0.45 0.47 0.50 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>0.3 -0.2 -0.8</direction>
+    </light>
+
+    <!-- ========================================================================= -->
+    <!-- 0. Ground Plane: ASTM E54.09 High Friction Concrete (mu = mu2 = 1.5)      -->
+    <!-- ========================================================================= -->
+    <model name='ground_plane'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>60 60</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.5</mu>
+                <mu2>1.5</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>60 60</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.38 0.40 0.42 1</ambient>
+            <diffuse>0.38 0.40 0.42 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <pose>0 0 0 0 0 0</pose>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 1. Perimeter Arena Enclosure and Optical Divider Walls                     -->
+    <!-- Arena Bounds: X in [-9.5, 10.5], Y in [-12.0, 9.5]                       -->
+    <!-- Divider walls prevent LiDAR beam cross-talk between isolated test lanes   -->
+    <!-- ========================================================================= -->
+    <model name='arena_enclosure_and_dividers'>
+      <static>true</static>
+      <link name='walls'>
+        <!-- Outer Perimeter North Wall (y = +9.5) -->
+        <collision name='wall_north'>
+          <pose>0.5 9.5 0.75 0 0 0</pose>
+          <geometry><box><size>20.0 0.3 1.5</size></box></geometry>
+        </collision>
+        <visual name='wall_north_v'>
+          <pose>0.5 9.5 0.75 0 0 0</pose>
+          <geometry><box><size>20.0 0.3 1.5</size></box></geometry>
+          <material><ambient>0.48 0.50 0.52 1</ambient><diffuse>0.48 0.50 0.52 1</diffuse></material>
+        </visual>
+
+        <!-- Outer Perimeter South Wall (y = -12.0) -->
+        <collision name='wall_south'>
+          <pose>0.5 -12.0 0.75 0 0 0</pose>
+          <geometry><box><size>20.0 0.3 1.5</size></box></geometry>
+        </collision>
+        <visual name='wall_south_v'>
+          <pose>0.5 -12.0 0.75 0 0 0</pose>
+          <geometry><box><size>20.0 0.3 1.5</size></box></geometry>
+          <material><ambient>0.48 0.50 0.52 1</ambient><diffuse>0.48 0.50 0.52 1</diffuse></material>
+        </visual>
+
+        <!-- Outer Perimeter West Wall (x = -9.5) -->
+        <collision name='wall_west'>
+          <pose>-9.5 -1.25 0.75 0 0 0</pose>
+          <geometry><box><size>0.3 21.8 1.5</size></box></geometry>
+        </collision>
+        <visual name='wall_west_v'>
+          <pose>-9.5 -1.25 0.75 0 0 0</pose>
+          <geometry><box><size>0.3 21.8 1.5</size></box></geometry>
+          <material><ambient>0.48 0.50 0.52 1</ambient><diffuse>0.48 0.50 0.52 1</diffuse></material>
+        </visual>
+
+        <!-- Outer Perimeter East Wall (x = +10.5) -->
+        <collision name='wall_east'>
+          <pose>10.5 -1.25 0.75 0 0 0</pose>
+          <geometry><box><size>0.3 21.8 1.5</size></box></geometry>
+        </collision>
+        <visual name='wall_east_v'>
+          <pose>10.5 -1.25 0.75 0 0 0</pose>
+          <geometry><box><size>0.3 21.8 1.5</size></box></geometry>
+          <material><ambient>0.48 0.50 0.52 1</ambient><diffuse>0.48 0.50 0.52 1</diffuse></material>
+        </visual>
+
+        <!-- Lane 1 / Lane 2 Divider Wall (y = +5.5) -->
+        <collision name='divider_l1_l2'>
+          <pose>0.5 5.5 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+        </collision>
+        <visual name='divider_l1_l2_v'>
+          <pose>0.5 5.5 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+          <material><ambient>0.52 0.55 0.58 1</ambient><diffuse>0.52 0.55 0.58 1</diffuse></material>
+        </visual>
+
+        <!-- Lane 2 / Lane 3 Divider Wall (y = +1.0) -->
+        <collision name='divider_l2_l3'>
+          <pose>0.5 1.0 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+        </collision>
+        <visual name='divider_l2_l3_v'>
+          <pose>0.5 1.0 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+          <material><ambient>0.52 0.55 0.58 1</ambient><diffuse>0.52 0.55 0.58 1</diffuse></material>
+        </visual>
+
+        <!-- Lane 3 / Lane 4 Divider Wall (y = -4.8) -->
+        <collision name='divider_l3_l4'>
+          <pose>0.5 -4.8 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+        </collision>
+        <visual name='divider_l3_l4_v'>
+          <pose>0.5 -4.8 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+          <material><ambient>0.52 0.55 0.58 1</ambient><diffuse>0.52 0.55 0.58 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 2. TRACK 1: Scenario S1 — Height-Adaptive Step-Over and Bypass Lane          -->
+    <!-- Center Line y = 7.5m, Width 3.7m (y in [5.65, 9.35])                      -->
+    <!-- Start: (-7.0, 7.5, 0.45) -> Goal: (8.5, 7.5)                              -->
+    <!-- Obstacles: 3cm (Passable Crawl), 8cm (Curb/Bypass), 15cm and 30cm (Lethal)  -->
+    <!-- ========================================================================= -->
+    <model name='lane_s1_height_adaptive_lane'>
+      <static>true</static>
+      <link name='s1_elements'>
+        <!-- O1: 3cm Micro-Conduit (x = -3.0m, y = 7.5m) -->
+        <!-- Center width = 0.8m, height = 0.03m (Passable step-over) -->
+        <collision name='s1_obs_3cm'>
+          <pose>-3.0 7.5 0.015 0 0 0</pose>
+          <geometry><box><size>0.25 0.80 0.03</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s1_obs_3cm_v'>
+          <pose>-3.0 7.5 0.015 0 0 0</pose>
+          <geometry><box><size>0.25 0.80 0.03</size></box></geometry>
+          <material><ambient>0.20 0.75 0.35 1</ambient><diffuse>0.20 0.75 0.35 1</diffuse></material>
+        </visual>
+
+        <!-- O2: 8cm Industrial Curb (x = 0.5m, y = 7.5m) -->
+        <!-- Center width = 1.0m, height = 0.08m (Borderline in sim -> Lateral bypass) -->
+        <collision name='s1_obs_8cm'>
+          <pose>0.5 7.5 0.04 0 0 0</pose>
+          <geometry><box><size>0.40 1.00 0.08</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s1_obs_8cm_v'>
+          <pose>0.5 7.5 0.04 0 0 0</pose>
+          <geometry><box><size>0.40 1.00 0.08</size></box></geometry>
+          <material><ambient>0.92 0.58 0.10 1</ambient><diffuse>0.92 0.58 0.10 1</diffuse></material>
+        </visual>
+
+        <!-- O3: 15cm Rigid Step Block (x = 4.0m, y = 7.5m) -->
+        <!-- Center width = 1.2m, height = 0.15m (Strictly Lethal in sim -> Lateral bypass) -->
+        <collision name='s1_obs_15cm'>
+          <pose>4.0 7.5 0.075 0 0 0</pose>
+          <geometry><box><size>0.50 1.20 0.15</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s1_obs_15cm_v'>
+          <pose>4.0 7.5 0.075 0 0 0</pose>
+          <geometry><box><size>0.50 1.20 0.15</size></box></geometry>
+          <material><ambient>0.88 0.20 0.15 1</ambient><diffuse>0.88 0.20 0.15 1</diffuse></material>
+        </visual>
+
+        <!-- O4: 30cm Heavy Concrete Barrier (x = 7.0m, y = 7.5m) -->
+        <!-- Center width = 1.4m, height = 0.30m (Strictly Lethal obstacle) -->
+        <collision name='s1_obs_30cm'>
+          <pose>7.0 7.5 0.15 0 0 0</pose>
+          <geometry><box><size>0.60 1.40 0.30</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s1_obs_30cm_v'>
+          <pose>7.0 7.5 0.15 0 0 0</pose>
+          <geometry><box><size>0.60 1.40 0.30</size></box></geometry>
+          <material><ambient>0.75 0.10 0.10 1</ambient><diffuse>0.75 0.10 0.10 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 3. TRACK 2: Scenario S2 — Constrained Narrow Passage with Floor Conduits   -->
+    <!-- Center Line y = 3.25m, Corridor Tapering: 1.20m -> 1.00m -> 0.80m         -->
+    <!-- Start: (-7.0, 3.25, 0.45) -> Goal: (8.0, 3.25)                            -->
+    <!-- Full-width 3.5cm speed bumps force step-over; 2D planners lock and abort  -->
+    <!-- ========================================================================= -->
+    <model name='lane_s2_narrow_passage'>
+      <static>true</static>
+      <link name='s2_elements'>
+        <!-- Corridor Section 1: Width = 1.20m (y in [2.65, 3.85], x in [-6.5, -2.5]) -->
+        <collision name='s2_c1_north'>
+          <pose>-4.5 4.35 0.5 0 0 0</pose>
+          <geometry><box><size>4.2 0.95 1.0</size></box></geometry>
+        </collision>
+        <visual name='s2_c1_north_v'>
+          <pose>-4.5 4.35 0.5 0 0 0</pose>
+          <geometry><box><size>4.2 0.95 1.0</size></box></geometry>
+          <material><ambient>0.60 0.62 0.65 1</ambient><diffuse>0.60 0.62 0.65 1</diffuse></material>
+        </visual>
+
+        <collision name='s2_c1_south'>
+          <pose>-4.5 2.15 0.5 0 0 0</pose>
+          <geometry><box><size>4.2 0.95 1.0</size></box></geometry>
+        </collision>
+        <visual name='s2_c1_south_v'>
+          <pose>-4.5 2.15 0.5 0 0 0</pose>
+          <geometry><box><size>4.2 0.95 1.0</size></box></geometry>
+          <material><ambient>0.60 0.62 0.65 1</ambient><diffuse>0.60 0.62 0.65 1</diffuse></material>
+        </visual>
+
+        <!-- Corridor Section 2: Width = 1.00m (y in [2.75, 3.75], x in [-2.5, 1.5]) -->
+        <collision name='s2_c2_north'>
+          <pose>-0.5 4.45 0.5 0 0 0</pose>
+          <geometry><box><size>4.0 1.35 1.0</size></box></geometry>
+        </collision>
+        <visual name='s2_c2_north_v'>
+          <pose>-0.5 4.45 0.5 0 0 0</pose>
+          <geometry><box><size>4.0 1.35 1.0</size></box></geometry>
+          <material><ambient>0.55 0.58 0.60 1</ambient><diffuse>0.55 0.58 0.60 1</diffuse></material>
+        </visual>
+
+        <collision name='s2_c2_south'>
+          <pose>-0.5 2.05 0.5 0 0 0</pose>
+          <geometry><box><size>4.0 1.35 1.0</size></box></geometry>
+        </collision>
+        <visual name='s2_c2_south_v'>
+          <pose>-0.5 2.05 0.5 0 0 0</pose>
+          <geometry><box><size>4.0 1.35 1.0</size></box></geometry>
+          <material><ambient>0.55 0.58 0.60 1</ambient><diffuse>0.55 0.58 0.60 1</diffuse></material>
+        </visual>
+
+        <!-- S2 Full-width Floor Conduit 1 in Section 2 (x = -0.5m, width = 1.00m, h = 0.035m) -->
+        <collision name='s2_conduit_1'>
+          <pose>-0.5 3.25 0.0175 0 0 0</pose>
+          <geometry><box><size>0.22 1.00 0.035</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s2_conduit_1_v'>
+          <pose>-0.5 3.25 0.0175 0 0 0</pose>
+          <geometry><box><size>0.22 1.00 0.035</size></box></geometry>
+          <material><ambient>0.95 0.80 0.15 1</ambient><diffuse>0.95 0.80 0.15 1</diffuse></material>
+        </visual>
+
+        <!-- Corridor Section 3: Width = 0.80m (y in [2.85, 3.65], x in [1.5, 6.5]) -->
+        <collision name='s2_c3_north'>
+          <pose>4.0 4.55 0.5 0 0 0</pose>
+          <geometry><box><size>5.0 1.75 1.0</size></box></geometry>
+        </collision>
+        <visual name='s2_c3_north_v'>
+          <pose>4.0 4.55 0.5 0 0 0</pose>
+          <geometry><box><size>5.0 1.75 1.0</size></box></geometry>
+          <material><ambient>0.50 0.53 0.55 1</ambient><diffuse>0.50 0.53 0.55 1</diffuse></material>
+        </visual>
+
+        <collision name='s2_c3_south'>
+          <pose>4.0 1.95 0.5 0 0 0</pose>
+          <geometry><box><size>5.0 1.75 1.0</size></box></geometry>
+        </collision>
+        <visual name='s2_c3_south_v'>
+          <pose>4.0 1.95 0.5 0 0 0</pose>
+          <geometry><box><size>5.0 1.75 1.0</size></box></geometry>
+          <material><ambient>0.50 0.53 0.55 1</ambient><diffuse>0.50 0.53 0.55 1</diffuse></material>
+        </visual>
+
+        <!-- S2 Full-width Floor Conduit 2 in Section 3 (x = 3.8m, width = 0.80m, h = 0.035m) -->
+        <collision name='s2_conduit_2'>
+          <pose>3.8 3.25 0.0175 0 0 0</pose>
+          <geometry><box><size>0.22 0.80 0.035</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s2_conduit_2_v'>
+          <pose>3.8 3.25 0.0175 0 0 0</pose>
+          <geometry><box><size>0.22 0.80 0.035</size></box></geometry>
+          <material><ambient>0.95 0.80 0.15 1</ambient><diffuse>0.95 0.80 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 4. TRACK 3: Scenario S3 — Multi-Grade ASTM Slope Triad                     -->
+    <!-- ASTM E2803 Standard Ramps: 12° (Grade A), 18° (Grade B), 26° (Over-limit)  -->
+    <!-- Three parallel tracks (y = 0.0m, -1.5m, -3.2m)                             -->
+    <!-- ========================================================================= -->
+    <model name='lane_s3_slope_triad'>
+      <static>true</static>
+      <link name='s3_elements'>
+        <!-- ========== S3-A: 12° Gentle Ramp (Center y = 0.0m, width = 1.15m) ========== -->
+        <!-- Incline run = 2.5m, pitch = -0.2094 rad (-12°), rise = 0.53m -->
+        <collision name='s3a_ramp_up'>
+          <pose>-1.75 0.0 0.266 0 -0.2094 0</pose>
+          <geometry><box><size>2.556 1.15 0.08</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s3a_ramp_up_v'>
+          <pose>-1.75 0.0 0.266 0 -0.2094 0</pose>
+          <geometry><box><size>2.556 1.15 0.08</size></box></geometry>
+          <material><ambient>0.15 0.65 0.25 1</ambient><diffuse>0.15 0.65 0.25 1</diffuse></material>
+        </visual>
+
+        <!-- S3-A Top Platform (length = 1.5m, height = 0.53m) -->
+        <collision name='s3a_plat'>
+          <pose>0.25 0.0 0.266 0 0 0</pose>
+          <geometry><box><size>1.50 1.15 0.532</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s3a_plat_v'>
+          <pose>0.25 0.0 0.266 0 0 0</pose>
+          <geometry><box><size>1.50 1.15 0.532</size></box></geometry>
+          <material><ambient>0.20 0.70 0.30 1</ambient><diffuse>0.20 0.70 0.30 1</diffuse></material>
+        </visual>
+
+        <!-- S3-A Down Ramp (run = 2.5m, pitch = +0.2094 rad) -->
+        <collision name='s3a_ramp_down'>
+          <pose>2.25 0.0 0.266 0 0.2094 0</pose>
+          <geometry><box><size>2.556 1.15 0.08</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s3a_ramp_down_v'>
+          <pose>2.25 0.0 0.266 0 0.2094 0</pose>
+          <geometry><box><size>2.556 1.15 0.08</size></box></geometry>
+          <material><ambient>0.15 0.65 0.25 1</ambient><diffuse>0.15 0.65 0.25 1</diffuse></material>
+        </visual>
+
+        <!-- Guide Curbs for S3-A -->
+        <collision name='s3a_curb_n'><pose>0.25 0.60 0.35 0 0 0</pose><geometry><box><size>7.0 0.08 0.70</size></box></geometry></collision>
+        <visual name='s3a_curb_n_v'><pose>0.25 0.60 0.35 0 0 0</pose><geometry><box><size>7.0 0.08 0.70</size></box></geometry><material><ambient>0.5 0.5 0.5 1</ambient><diffuse>0.5 0.5 0.5 1</diffuse></material></visual>
+
+        <!-- ========== S3-B: 18° Critical Ramp (Center y = -1.6m, width = 1.15m) ========== -->
+        <!-- Incline run = 2.0m, pitch = -0.3142 rad (-18°), rise = 0.65m -->
+        <collision name='s3b_ramp_up'>
+          <pose>-1.50 -1.6 0.325 0 -0.3142 0</pose>
+          <geometry><box><size>2.103 1.15 0.08</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s3b_ramp_up_v'>
+          <pose>-1.50 -1.6 0.325 0 -0.3142 0</pose>
+          <geometry><box><size>2.103 1.15 0.08</size></box></geometry>
+          <material><ambient>0.92 0.55 0.10 1</ambient><diffuse>0.92 0.55 0.10 1</diffuse></material>
+        </visual>
+
+        <!-- S3-B Top Platform (length = 1.5m, height = 0.65m) -->
+        <collision name='s3b_plat'>
+          <pose>0.25 -1.6 0.325 0 0 0</pose>
+          <geometry><box><size>1.50 1.15 0.650</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s3b_plat_v'>
+          <pose>0.25 -1.6 0.325 0 0 0</pose>
+          <geometry><box><size>1.50 1.15 0.650</size></box></geometry>
+          <material><ambient>0.95 0.60 0.15 1</ambient><diffuse>0.95 0.60 0.15 1</diffuse></material>
+        </visual>
+
+        <!-- S3-B Down Ramp (run = 2.0m, pitch = +0.3142 rad) -->
+        <collision name='s3b_ramp_down'>
+          <pose>2.00 -1.6 0.325 0 0.3142 0</pose>
+          <geometry><box><size>2.103 1.15 0.08</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s3b_ramp_down_v'>
+          <pose>2.00 -1.6 0.325 0 0.3142 0</pose>
+          <geometry><box><size>2.103 1.15 0.08</size></box></geometry>
+          <material><ambient>0.92 0.55 0.10 1</ambient><diffuse>0.92 0.55 0.10 1</diffuse></material>
+        </visual>
+
+        <!-- Divider Curb between S3-A and S3-B -->
+        <collision name='s3_curb_ab'><pose>0.25 -0.80 0.40 0 0 0</pose><geometry><box><size>7.0 0.12 0.80</size></box></geometry></collision>
+        <visual name='s3_curb_ab_v'><pose>0.25 -0.80 0.40 0 0 0</pose><geometry><box><size>7.0 0.12 0.80</size></box></geometry><material><ambient>0.5 0.5 0.5 1</ambient><diffuse>0.5 0.5 0.5 1</diffuse></material></visual>
+
+        <!-- ========== S3-C: 26° Lethal Over-Limit Ramp (Center y = -3.4m, width = 1.15m) ========== -->
+        <!-- Incline run = 1.5m, pitch = -0.4538 rad (-26°), rise = 0.73m -->
+        <collision name='s3c_ramp_up'>
+          <pose>-1.25 -3.4 0.366 0 -0.4538 0</pose>
+          <geometry><box><size>1.669 1.15 0.08</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s3c_ramp_up_v'>
+          <pose>-1.25 -3.4 0.366 0 -0.4538 0</pose>
+          <geometry><box><size>1.669 1.15 0.08</size></box></geometry>
+          <material><ambient>0.85 0.15 0.15 1</ambient><diffuse>0.85 0.15 0.15 1</diffuse></material>
+        </visual>
+
+        <!-- S3-C Dead-end Platform and Warning Stop Barrier -->
+        <collision name='s3c_plat'>
+          <pose>0.0 -3.4 0.366 0 0 0</pose>
+          <geometry><box><size>1.00 1.15 0.732</size></box></geometry>
+        </collision>
+        <visual name='s3c_plat_v'>
+          <pose>0.0 -3.4 0.366 0 0 0</pose>
+          <geometry><box><size>1.00 1.15 0.732</size></box></geometry>
+          <material><ambient>0.80 0.10 0.10 1</ambient><diffuse>0.80 0.10 0.10 1</diffuse></material>
+        </visual>
+        <collision name='s3c_stop_wall'><pose>0.5 -3.4 0.85 0 0 0</pose><geometry><box><size>0.15 1.15 0.60</size></box></geometry></collision>
+        <visual name='s3c_stop_wall_v'><pose>0.5 -3.4 0.85 0 0 0</pose><geometry><box><size>0.15 1.15 0.60</size></box></geometry><material><ambient>0.9 0.1 0.1 1</ambient><diffuse>0.9 0.1 0.1 1</diffuse></material></visual>
+
+        <!-- Divider Curb between S3-B and S3-C -->
+        <collision name='s3_curb_bc'><pose>0.25 -2.40 0.40 0 0 0</pose><geometry><box><size>7.0 0.12 0.80</size></box></geometry></collision>
+        <visual name='s3_curb_bc_v'><pose>0.25 -2.40 0.40 0 0 0</pose><geometry><box><size>7.0 0.12 0.80</size></box></geometry><material><ambient>0.5 0.5 0.5 1</ambient><diffuse>0.5 0.5 0.5 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 5. TRACK 4: Scenario S4 — Bifurcated Route Selection Stress Test           -->
+    <!-- Center y = -8.5m, X in [-7.5, 8.5]                                         -->
+    <!-- Path A (North, Short direct 12.5m): Blocked at x = 0.0 by 18cm lethal step  -->
+    <!-- Path B (South, Detour 18.5m, +48% long): Gentle 10° accessible bridge      -->
+    <!-- ========================================================================= -->
+    <model name='lane_s4_bifurcated_route'>
+      <static>true</static>
+      <link name='s4_elements'>
+        <!-- Central Island Wall separating Path A (North) and Path B (South) -->
+        <!-- Center y = -8.5m, X in [-3.5, 4.0], thickness = 1.0m (y in [-9.0, -8.0]) -->
+        <collision name='s4_center_island'>
+          <pose>0.25 -8.5 0.6 0 0 0</pose>
+          <geometry><box><size>7.5 1.0 1.2</size></box></geometry>
+        </collision>
+        <visual name='s4_center_island_v'>
+          <pose>0.25 -8.5 0.6 0 0 0</pose>
+          <geometry><box><size>7.5 1.0 1.2</size></box></geometry>
+          <material><ambient>0.45 0.47 0.50 1</ambient><diffuse>0.45 0.47 0.50 1</diffuse></material>
+        </visual>
+
+        <!-- North Outer Boundary Wall (y = -5.0) for Path A -->
+        <collision name='s4_north_wall'>
+          <pose>0.25 -5.0 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+        </collision>
+        <visual name='s4_north_wall_v'>
+          <pose>0.25 -5.0 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+          <material><ambient>0.48 0.50 0.52 1</ambient><diffuse>0.48 0.50 0.52 1</diffuse></material>
+        </visual>
+
+        <!-- South Outer Boundary Wall (y = -11.8) for Path B -->
+        <collision name='s4_south_wall'>
+          <pose>0.25 -11.8 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+        </collision>
+        <visual name='s4_south_wall_v'>
+          <pose>0.25 -11.8 0.6 0 0 0</pose>
+          <geometry><box><size>19.6 0.25 1.2</size></box></geometry>
+          <material><ambient>0.48 0.50 0.52 1</ambient><diffuse>0.48 0.50 0.52 1</diffuse></material>
+        </visual>
+
+        <!-- ========== Path A Lethal Trap (x = 0.0, y = -6.5m, width = 2.6m) ========== -->
+        <!-- 18cm Rigid Step Barrier spanning entire width of Path A (No bypass!) -->
+        <collision name='s4_path_a_trap'>
+          <pose>0.0 -6.5 0.09 0 0 0</pose>
+          <geometry><box><size>0.60 2.60 0.18</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s4_path_a_trap_v'>
+          <pose>0.0 -6.5 0.09 0 0 0</pose>
+          <geometry><box><size>0.60 2.60 0.18</size></box></geometry>
+          <material><ambient>0.85 0.15 0.15 1</ambient><diffuse>0.85 0.15 0.15 1</diffuse></material>
+        </visual>
+
+        <!-- Warning Strip atop Path A trap -->
+        <visual name='s4_path_a_warning_stripe'>
+          <pose>0.0 -6.5 0.181 0 0 0</pose>
+          <geometry><box><size>0.50 2.50 0.005</size></box></geometry>
+          <material><ambient>0.95 0.85 0.10 1</ambient><diffuse>0.95 0.85 0.10 1</diffuse></material>
+        </visual>
+
+        <!-- ========== Path B Accessible Gentle Bridge (x = 0.0, y = -10.4m, width = 2.4m) ========== -->
+        <!-- Gentle 10° Bridge (run = 1.8m, pitch = -0.1745 rad, rise = 0.32m) -->
+        <collision name='s4_bridge_up'>
+          <pose>-1.15 -10.4 0.16 0 -0.1745 0</pose>
+          <geometry><box><size>1.828 2.40 0.08</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s4_bridge_up_v'>
+          <pose>-1.15 -10.4 0.16 0 -0.1745 0</pose>
+          <geometry><box><size>1.828 2.40 0.08</size></box></geometry>
+          <material><ambient>0.20 0.65 0.30 1</ambient><diffuse>0.20 0.65 0.30 1</diffuse></material>
+        </visual>
+
+        <!-- Path B Bridge Top Deck (length = 1.2m, height = 0.32m) -->
+        <collision name='s4_bridge_deck'>
+          <pose>0.15 -10.4 0.16 0 0 0</pose>
+          <geometry><box><size>1.20 2.40 0.32</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s4_bridge_deck_v'>
+          <pose>0.15 -10.4 0.16 0 0 0</pose>
+          <geometry><box><size>1.20 2.40 0.32</size></box></geometry>
+          <material><ambient>0.25 0.70 0.35 1</ambient><diffuse>0.25 0.70 0.35 1</diffuse></material>
+        </visual>
+
+        <!-- Path B Bridge Down (run = 1.8m, pitch = +0.1745 rad) -->
+        <collision name='s4_bridge_down'>
+          <pose>1.45 -10.4 0.16 0 0.1745 0</pose>
+          <geometry><box><size>1.828 2.40 0.08</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='s4_bridge_down_v'>
+          <pose>1.45 -10.4 0.16 0 0.1745 0</pose>
+          <geometry><box><size>1.828 2.40 0.08</size></box></geometry>
+          <material><ambient>0.20 0.65 0.30 1</ambient><diffuse>0.20 0.65 0.30 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

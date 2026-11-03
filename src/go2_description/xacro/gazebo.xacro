@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="go2_gazebo" params="robot_name">
+    <gazebo>
+      <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system.so">
+        <ros><namespace>/${robot_name}</namespace></ros>
+        <parameters>$(find go2_description)/config/ros_control.yaml</parameters>
+      </plugin>
+    </gazebo>
+    <!-- 12 腿关节 ros2_control：Gazebo 靠它认出 12 个关节，
+         缺一个 spawner 就起不来，所以必须全写，一行不能少 -->
+    <ros2_control name="${robot_name}_GazeboSystem" type="system">
+      <hardware><plugin>gz_ros2_control/GazeboSimSystem</plugin></hardware>
+      <joint name="lf_hip_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="lf_upper_leg_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="lf_lower_leg_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="rf_hip_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="rf_upper_leg_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="rf_lower_leg_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="lh_hip_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="lh_upper_leg_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="lh_lower_leg_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="rh_hip_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="rh_upper_leg_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+      <joint name="rh_lower_leg_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/><state_interface name="velocity"/><state_interface name="effort"/>
+      </joint>
+    </ros2_control>
+    <gazebo reference="imu_link">
+      <gravity>false</gravity>
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on><update_rate>100</update_rate>
+        <visualize>false</visualize>
+        <topic>/${robot_name}/imu_plugin/out</topic>
+        <plugin filename="libgz-sim-imu-system.so" name="gz::sim::systems::Imu"/>
+        <pose>0 0 0 0 0 0</pose><gz_frame_id>imu_link</gz_frame_id>
+      </sensor>
+    </gazebo>
+    <gazebo reference="lidar">
+      <sensor name="L1_lidar" type="gpu_lidar">
+        <pose>0 0 0 0 0 0</pose><visualize>false</visualize><update_rate>10</update_rate>
+        <lidar>
+          <scan>
+            <horizontal><samples>640</samples><resolution>1</resolution>
+              <min_angle>1.396263</min_angle><max_angle>4.8869</max_angle></horizontal>
+            <vertical><samples>16</samples><resolution>1</resolution>
+              <min_angle>-0.261799</min_angle><max_angle>0.261799</max_angle></vertical>
+          </scan>
+          <range><min>0.3</min><max>35.0</max><resolution>0.001</resolution></range>
+        </lidar>
+        <topic>/${robot_name}/scan</topic><gz_frame_id>lidar</gz_frame_id>
+      </sensor>
+      <sensor name="L1_imu" type="imu">
+        <always_on>true</always_on><update_rate>100</update_rate>
+        <visualize>false</visualize>
+        <topic>/${robot_name}/utlidar/imu</topic>
+        <plugin filename="libgz-sim-imu-system.so" name="gz::sim::systems::Imu"/>
+        <pose>0 0 0 0 0 0</pose><gz_frame_id>lidar</gz_frame_id>
+        <!-- 高斯噪声模型（参考 BMI088），防止 Point-LIO 在四足行走振动下发散 -->
+        <imu>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0.0</mean><stddev>0.002</stddev><bias_mean>0.0001</bias_mean><bias_stddev>0.00005</bias_stddev></noise></x>
+            <y><noise type="gaussian"><mean>0.0</mean><stddev>0.002</stddev><bias_mean>0.0001</bias_mean><bias_stddev>0.00005</bias_stddev></noise></y>
+            <z><noise type="gaussian"><mean>0.0</mean><stddev>0.002</stddev><bias_mean>0.0001</bias_mean><bias_stddev>0.00005</bias_stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0.0</mean><stddev>0.017</stddev><bias_mean>0.001</bias_mean><bias_stddev>0.001</bias_stddev></noise></x>
+            <y><noise type="gaussian"><mean>0.0</mean><stddev>0.017</stddev><bias_mean>0.001</bias_mean><bias_stddev>0.001</bias_stddev></noise></y>
+            <z><noise type="gaussian"><mean>0.0</mean><stddev>0.017</stddev><bias_mean>0.001</bias_mean><bias_stddev>0.001</bias_stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+    </gazebo>
+    <!-- 各腿 link 的摩擦/碰撞参数：脚 mu 0.6 抓地，其余 0.2；站不站得住看这里 -->
+    <gazebo reference="trunk"><mu1>0.2</mu1><mu2>0.2</mu2><kp>10000.0</kp><kd>1.0</kd></gazebo>
+    <!-- FL leg -->
+    <gazebo reference="lf_hip_link"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
+    <gazebo reference="lf_upper_leg_link">
+      <mu1>0.2</mu1><mu2>0.2</mu2><self_collide>1</self_collide><kp>10000.0</kp><kd>1.0</kd>
+    </gazebo>
+    <gazebo reference="lf_lower_leg_link">
+      <mu1>0.2</mu1><mu2>0.2</mu2><self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="lf_foot_link">
+      <mu1>0.6</mu1><mu2>0.6</mu2><self_collide>1</self_collide><kp>10000.0</kp><kd>1.0</kd>
+    </gazebo>
+    <!-- FR leg -->
+    <gazebo reference="rf_hip"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
+    <gazebo reference="rf_upper_leg_link">
+      <mu1>0.2</mu1><mu2>0.2</mu2><self_collide>1</self_collide><kp>10000.0</kp><kd>1.0</kd>
+    </gazebo>
+    <gazebo reference="rf_lower_leg_link">
+      <mu1>0.2</mu1><mu2>0.2</mu2><self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="rf_foot_link">
+      <mu1>0.6</mu1><mu2>0.6</mu2><self_collide>1</self_collide><kp>10000.0</kp><kd>1.0</kd>
+    </gazebo>
+    <!-- RL leg -->
+    <gazebo reference="lh_hip"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
+    <gazebo reference="lh_upper_leg_link">
+      <mu1>0.2</mu1><mu2>0.2</mu2><self_collide>1</self_collide><kp>10000.0</kp><kd>1.0</kd>
+    </gazebo>
+    <gazebo reference="lh_lower_leg_link">
+      <mu1>0.2</mu1><mu2>0.2</mu2><self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="lh_foot_link">
+      <mu1>0.6</mu1><mu2>0.6</mu2><self_collide>1</self_collide><kp>10000.0</kp><kd>1.0</kd>
+    </gazebo>
+    <!-- RR leg -->
+    <gazebo reference="rh_hip"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
+    <gazebo reference="rh_upper_leg_link">
+      <mu1>0.2</mu1><mu2>0.2</mu2><self_collide>1</self_collide><kp>10000.0</kp><kd>1.0</kd>
+    </gazebo>
+    <gazebo reference="rh_lower_leg_link">
+      <mu1>0.2</mu1><mu2>0.2</mu2><self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="rh_foot_link">
+      <mu1>0.6</mu1><mu2>0.6</mu2><self_collide>1</self_collide><kp>10000.0</kp><kd>1.0</kd>
+    </gazebo>
+  </xacro:macro>
+</robot>

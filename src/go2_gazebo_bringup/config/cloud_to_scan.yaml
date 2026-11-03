@@ -1,0 +1,17 @@
+/**:
+  cloud_to_scan:
+    ros__parameters:
+      target_frame: base_link
+      # 实测仿真点云投影到 base_link 后地面在 z ≈ -0.28m；
+      # 四足行走俯仰摆动通常在 ±3°，下限设为 -0.12m（地表以上约 16cm），彻底杜绝踏地俯仰导致地面噪点误投射为 2D 激光障碍物
+      transform_tolerance: 0.1
+      min_height: -0.12
+      max_height: 0.50
+      angle_min: -1.7453           # 前方 200° 水平有效扫描区 (-100° ~ +100°)
+      angle_max: 1.7453
+      angle_increment: 0.0087      # 约 0.5° 分辨率
+      scan_time: 0.1
+      # L1 盲区 0.3m，与 slam/nav2 对齐，避免扫到狗身外壳
+      range_min: 0.30
+      range_max: 35.0
+      use_inf: true

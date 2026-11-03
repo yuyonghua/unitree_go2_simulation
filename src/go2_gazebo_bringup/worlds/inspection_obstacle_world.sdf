@@ -1,0 +1,799 @@
+<?xml version='1.0' encoding='ASCII'?>
+<sdf version='1.7'>
+  <world name='inspection_obstacle_world'>
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <!-- Gazebo Harmonic Core System Plugins -->
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+    </plugin>
+
+    <!-- Global Sunlight -->
+    <light type='directional' name='sun'>
+      <cast_shadows>true</cast_shadows>
+      <pose>5 0 25 0 0 0</pose>
+      <diffuse>0.92 0.92 0.92 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.35 0.25 -0.9</direction>
+    </light>
+
+    <!-- Secondary Skylight Fill Illumination -->
+    <light type='directional' name='skylight_fill'>
+      <cast_shadows>false</cast_shadows>
+      <pose>-5 5 20 0 0 0</pose>
+      <diffuse>0.40 0.42 0.45 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>0.3 -0.2 -0.8</direction>
+    </light>
+
+    <!-- High Friction Ground Plane (ASTM Standard Traction, mu=1.5) -->
+    <model name='ground_plane'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>70 70</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.5</mu>
+                <mu2>1.5</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>70 70</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.35 0.37 0.39 1</ambient>
+            <diffuse>0.35 0.37 0.39 1</diffuse>
+          </material>
+        </visual>
+      </link>
+      <pose>8 0 0 0 0 0</pose>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 1. Arena Boundary & Dividing Enclosure (36m x 24m)                        -->
+    <!-- ========================================================================= -->
+    <model name='arena_enclosure'>
+      <static>true</static>
+      <link name='walls'>
+        <!-- South Perimeter Wall (y = -12.0) -->
+        <collision name='wall_south'>
+          <pose>8 -12 1.5 0 0 0</pose>
+          <geometry><box><size>36 0.3 3.0</size></box></geometry>
+        </collision>
+        <visual name='wall_south_vis'>
+          <pose>8 -12 1.5 0 0 0</pose>
+          <geometry><box><size>36 0.3 3.0</size></box></geometry>
+          <material><ambient>0.52 0.55 0.58 1</ambient><diffuse>0.52 0.55 0.58 1</diffuse></material>
+        </visual>
+
+        <!-- North Perimeter Wall (y = +12.0) -->
+        <collision name='wall_north'>
+          <pose>8 12 1.5 0 0 0</pose>
+          <geometry><box><size>36 0.3 3.0</size></box></geometry>
+        </collision>
+        <visual name='wall_north_vis'>
+          <pose>8 12 1.5 0 0 0</pose>
+          <geometry><box><size>36 0.3 3.0</size></box></geometry>
+          <material><ambient>0.52 0.55 0.58 1</ambient><diffuse>0.52 0.55 0.58 1</diffuse></material>
+        </visual>
+
+        <!-- West Perimeter Wall (x = -10.0) -->
+        <collision name='wall_west'>
+          <pose>-10 0 1.5 0 0 0</pose>
+          <geometry><box><size>0.3 24 3.0</size></box></geometry>
+        </collision>
+        <visual name='wall_west_vis'>
+          <pose>-10 0 1.5 0 0 0</pose>
+          <geometry><box><size>0.3 24 3.0</size></box></geometry>
+          <material><ambient>0.52 0.55 0.58 1</ambient><diffuse>0.52 0.55 0.58 1</diffuse></material>
+        </visual>
+
+        <!-- East Perimeter Wall (x = +26.0) -->
+        <collision name='wall_east'>
+          <pose>26 0 1.5 0 0 0</pose>
+          <geometry><box><size>0.3 24 3.0</size></box></geometry>
+        </collision>
+        <visual name='wall_east_vis'>
+          <pose>26 0 1.5 0 0 0</pose>
+          <geometry><box><size>0.3 24 3.0</size></box></geometry>
+          <material><ambient>0.52 0.55 0.58 1</ambient><diffuse>0.52 0.55 0.58 1</diffuse></material>
+        </visual>
+
+        <!-- Zone A & Zone B Partition Wall (y = -2.0) with central courtyard gateway -->
+        <collision name='part_wall_w'>
+          <pose>-1.0 -2.0 0.9 0 0 0</pose>
+          <geometry><box><size>4.0 0.25 1.8</size></box></geometry>
+        </collision>
+        <visual name='part_wall_w_vis'>
+          <pose>-1.0 -2.0 0.9 0 0 0</pose>
+          <geometry><box><size>4.0 0.25 1.8</size></box></geometry>
+          <material><ambient>0.38 0.42 0.46 1</ambient><diffuse>0.38 0.42 0.46 1</diffuse></material>
+        </visual>
+
+        <collision name='part_wall_e'>
+          <pose>16.5 -2.0 0.9 0 0 0</pose>
+          <geometry><box><size>17.0 0.25 1.8</size></box></geometry>
+        </collision>
+        <visual name='part_wall_e_vis'>
+          <pose>16.5 -2.0 0.9 0 0 0</pose>
+          <geometry><box><size>17.0 0.25 1.8</size></box></geometry>
+          <material><ambient>0.38 0.42 0.46 1</ambient><diffuse>0.38 0.42 0.46 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 2. Zone A: 校园综合实验教学楼首层大厅与自习连廊 (1F Campus Complex)          -->
+    <!-- 机器狗生成点 (0, 0, 0.45) 处于开阔开门迎宾广场，周边 2.5m 绝对空旷无阻挡      -->
+    <!-- ========================================================================= -->
+
+    <!-- 1F 西侧自习与学术交流休闲区 (x in [-8, -3.5], y in [0.5, 11]) -->
+    <include>
+      <uri>model://aws_robomaker_residential_ReadingDesk_01</uri>
+      <name>campus_reading_desk_1</name>
+      <pose>-5.5 1.5 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>campus_chair_1</name>
+      <pose>-5.5 2.2 0 0 0 3.1416</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://cafe_table</uri>
+      <name>campus_cafe_table_1</name>
+      <pose>-5.5 5.5 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>campus_chair_2</name>
+      <pose>-5.5 6.4 0 0 0 3.1416</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
+      <name>campus_trash_can_1</name>
+      <pose>-7.0 0.8 0 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://cardboard_box</uri>
+      <name>campus_delivery_box_1</name>
+      <pose>-6.8 5.2 0.15 0 0 0.2</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://cardboard_box</uri>
+      <name>campus_delivery_box_2</name>
+      <pose>-6.8 5.7 0.15 0 0 -0.1</pose>
+      <static>true</static>
+    </include>
+
+    <!-- 1F 西侧自习室隔离墙 (形成 1.2m 门洞过道) -->
+    <model name='campus_1f_lounge_walls'>
+      <static>true</static>
+      <link name='lounge_wall_link'>
+        <collision name='lounge_wall_s'>
+          <pose>-5.5 -0.1 0.9 0 0 0</pose>
+          <geometry><box><size>4.5 0.2 1.8</size></box></geometry>
+        </collision>
+        <visual name='lounge_wall_s_v'>
+          <pose>-5.5 -0.1 0.9 0 0 0</pose>
+          <geometry><box><size>4.5 0.2 1.8</size></box></geometry>
+          <material><ambient>0.6 0.62 0.65 1</ambient><diffuse>0.6 0.62 0.65 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 3. 3D 悬空净空管道对比组 (Overhang Clearance, 证明 3D 相比 2D 的优势)         -->
+    <!-- ========================================================================= -->
+    <model name='overhang_clearance_test'>
+      <static>true</static>
+      <link name='overhang_pipes'>
+        <!-- [1] 低空致死悬空横管 (净空 = 0.35m < 机体高 0.40m -> 头部致命碰撞, Lethal 254) -->
+        <collision name='pipe_low_post_l'>
+          <pose>1.8 4.5 0.35 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.7</length></cylinder></geometry>
+        </collision>
+        <visual name='pipe_low_post_l_v'>
+          <pose>1.8 4.5 0.35 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.7</length></cylinder></geometry>
+          <material><ambient>0.85 0.2 0.1 1</ambient><diffuse>0.85 0.2 0.1 1</diffuse></material>
+        </visual>
+
+        <collision name='pipe_low_post_r'>
+          <pose>1.8 7.5 0.35 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.7</length></cylinder></geometry>
+        </collision>
+        <visual name='pipe_low_post_r_v'>
+          <pose>1.8 7.5 0.35 0 0 0</pose>
+          <geometry><cylinder><radius>0.05</radius><length>0.7</length></cylinder></geometry>
+          <material><ambient>0.85 0.2 0.1 1</ambient><diffuse>0.85 0.2 0.1 1</diffuse></material>
+        </visual>
+
+        <!-- 管道中心标高 0.425m, 半径 0.075m -> 底部净空 0.35m -->
+        <collision name='pipe_low_bar'>
+          <pose>1.8 6.0 0.425 1.5708 0 0</pose>
+          <geometry><cylinder><radius>0.075</radius><length>3.2</length></cylinder></geometry>
+        </collision>
+        <visual name='pipe_low_bar_v'>
+          <pose>1.8 6.0 0.425 1.5708 0 0</pose>
+          <geometry><cylinder><radius>0.075</radius><length>3.2</length></cylinder></geometry>
+          <material><ambient>0.95 0.25 0.15 1</ambient><diffuse>0.95 0.25 0.15 1</diffuse></material>
+        </visual>
+
+        <!-- [2] 高空通行建筑管线 (净空 = 0.85m > 机体高 0.40m -> 四足安全穿行, 2D代价地图误报死墙) -->
+        <collision name='pipe_high_post_l'>
+          <pose>3.8 4.5 0.65 0 0 0</pose>
+          <geometry><cylinder><radius>0.06</radius><length>1.3</length></cylinder></geometry>
+        </collision>
+        <visual name='pipe_high_post_l_v'>
+          <pose>3.8 4.5 0.65 0 0 0</pose>
+          <geometry><cylinder><radius>0.06</radius><length>1.3</length></cylinder></geometry>
+          <material><ambient>0.4 0.45 0.5 1</ambient><diffuse>0.4 0.45 0.5 1</diffuse></material>
+        </visual>
+
+        <collision name='pipe_high_post_r'>
+          <pose>3.8 7.5 0.65 0 0 0</pose>
+          <geometry><cylinder><radius>0.06</radius><length>1.3</length></cylinder></geometry>
+        </collision>
+        <visual name='pipe_high_post_r_v'>
+          <pose>3.8 7.5 0.65 0 0 0</pose>
+          <geometry><cylinder><radius>0.06</radius><length>1.3</length></cylinder></geometry>
+          <material><ambient>0.4 0.45 0.5 1</ambient><diffuse>0.4 0.45 0.5 1</diffuse></material>
+        </visual>
+
+        <!-- 管道中心标高 0.95m, 半径 0.10m -> 底部净空 0.85m -->
+        <collision name='pipe_high_bar'>
+          <pose>3.8 6.0 0.95 1.5708 0 0</pose>
+          <geometry><cylinder><radius>0.10</radius><length>3.2</length></cylinder></geometry>
+        </collision>
+        <visual name='pipe_high_bar_v'>
+          <pose>3.8 6.0 0.95 1.5708 0 0</pose>
+          <geometry><cylinder><radius>0.10</radius><length>3.2</length></cylinder></geometry>
+          <material><ambient>0.75 0.78 0.82 1</ambient><diffuse>0.75 0.78 0.82 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 4. 1F 真实架空景观台地与负向地坑边缘 (Negative Drop-Off Trench)               -->
+    <!-- 机器狗走上 +0.35m 架空台地，直面 0.35m 真实跌落悬崖与侧向保底廊桥              -->
+    <!-- ========================================================================= -->
+    <model name='campus_raised_terrace_with_pit'>
+      <static>true</static>
+      <link name='terrace_link'>
+        <!-- 上台阶 1: 标高 +0.175m (x = 3.65) -->
+        <collision name='step_up_1'>
+          <pose>3.65 1.0 0.0875 0 0 0</pose>
+          <geometry><box><size>0.35 4.8 0.175</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_up_1_v'>
+          <pose>3.65 1.0 0.0875 0 0 0</pose>
+          <geometry><box><size>0.35 4.8 0.175</size></box></geometry>
+          <material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material>
+        </visual>
+
+        <!-- 西段架空台地 (x in [3.85, 6.20], y in [-1.4, 3.4], 顶面标高 z = +0.35m) -->
+        <collision name='terrace_west_deck'>
+          <pose>5.025 1.0 0.175 0 0 0</pose>
+          <geometry><box><size>2.35 4.8 0.35</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='terrace_west_deck_v'>
+          <pose>5.025 1.0 0.175 0 0 0</pose>
+          <geometry><box><size>2.35 4.8 0.35</size></box></geometry>
+          <material><ambient>0.42 0.45 0.48 1</ambient><diffuse>0.42 0.45 0.48 1</diffuse></material>
+        </visual>
+
+        <!-- 负向地坑边缘警示线 (西侧悬崖边缘 x = 6.20) -->
+        <visual name='pit_warning_edge_w'>
+          <pose>6.15 0.1 0.355 0 0 0</pose>
+          <geometry><box><size>0.10 3.0 0.01</size></box></geometry>
+          <material><ambient>0.95 0.25 0.1 1</ambient><diffuse>0.95 0.25 0.1 1</diffuse></material>
+        </visual>
+
+        <!-- 【核心负向障碍】中间开敞跌落地坑 (x in [6.20, 7.80], y in [-1.4, 1.6]) -->
+        <!-- 该区域完全无顶板，直接垂直跌落 0.35m 摔到地面 z=0！3D可通行度检测到高程突变必须判定致死拒行 -->
+
+        <!-- 侧向保底窄廊桥 (x in [6.20, 7.80], y in [1.6, 3.4], 宽 1.8m，顶面标高 z = +0.35m) -->
+        <collision name='bypass_bridge_deck'>
+          <pose>7.0 2.5 0.175 0 0 0</pose>
+          <geometry><box><size>1.6 1.8 0.35</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='bypass_bridge_deck_v'>
+          <pose>7.0 2.5 0.175 0 0 0</pose>
+          <geometry><box><size>1.6 1.8 0.35</size></box></geometry>
+          <material><ambient>0.32 0.65 0.40 1</ambient><diffuse>0.32 0.65 0.40 1</diffuse></material>
+        </visual>
+
+        <!-- 廊桥临空防跌落护栏 (y = 1.60) -->
+        <collision name='bridge_guardrail'>
+          <pose>7.0 1.62 0.55 0 0 0</pose>
+          <geometry><box><size>1.6 0.05 0.40</size></box></geometry>
+        </collision>
+        <visual name='bridge_guardrail_v'>
+          <pose>7.0 1.62 0.55 0 0 0</pose>
+          <geometry><box><size>1.6 0.05 0.40</size></box></geometry>
+          <material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material>
+        </visual>
+
+        <!-- 东段架空台地 (x in [7.80, 10.20], y in [-1.4, 3.4], 顶面标高 z = +0.35m) -->
+        <collision name='terrace_east_deck'>
+          <pose>9.0 1.0 0.175 0 0 0</pose>
+          <geometry><box><size>2.4 4.8 0.35</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='terrace_east_deck_v'>
+          <pose>9.0 1.0 0.175 0 0 0</pose>
+          <geometry><box><size>2.4 4.8 0.35</size></box></geometry>
+          <material><ambient>0.42 0.45 0.48 1</ambient><diffuse>0.42 0.45 0.48 1</diffuse></material>
+        </visual>
+
+        <!-- 下台阶: 回到地面标高 z=0 (x = 10.35) -->
+        <collision name='step_down_1'>
+          <pose>10.35 1.0 0.0875 0 0 0</pose>
+          <geometry><box><size>0.35 4.8 0.175</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='step_down_1_v'>
+          <pose>10.35 1.0 0.0875 0 0 0</pose>
+          <geometry><box><size>0.35 4.8 0.175</size></box></geometry>
+          <material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 5. 双垂直通道之【通道一】：东侧 ASTM E2804 规范双跑折返楼梯 (Dog-Leg Stair) -->
+    <!-- 垂直攀爬标高升至 +2.4m 二层平台 (Flight 1 -> 休息平台 -> Flight 2)        -->
+    <!-- ========================================================================= -->
+    <model name='east_dogleg_staircase'>
+      <static>true</static>
+      <link name='staircase_structure'>
+        <!-- 第一梯跑 Flight 1: 10 阶向东上升至 +1.20m (y in [4.20, 5.50]) -->
+        <collision name='f1_step_1'><pose>11.14 4.85 0.06 0 0 0</pose><geometry><box><size>0.28 1.30 0.12</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_1_v'><pose>11.14 4.85 0.06 0 0 0</pose><geometry><box><size>0.28 1.30 0.12</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_2'><pose>11.42 4.85 0.12 0 0 0</pose><geometry><box><size>0.28 1.30 0.24</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_2_v'><pose>11.42 4.85 0.12 0 0 0</pose><geometry><box><size>0.28 1.30 0.24</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_3'><pose>11.70 4.85 0.18 0 0 0</pose><geometry><box><size>0.28 1.30 0.36</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_3_v'><pose>11.70 4.85 0.18 0 0 0</pose><geometry><box><size>0.28 1.30 0.36</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_4'><pose>11.98 4.85 0.24 0 0 0</pose><geometry><box><size>0.28 1.30 0.48</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_4_v'><pose>11.98 4.85 0.24 0 0 0</pose><geometry><box><size>0.28 1.30 0.48</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_5'><pose>12.26 4.85 0.30 0 0 0</pose><geometry><box><size>0.28 1.30 0.60</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_5_v'><pose>12.26 4.85 0.30 0 0 0</pose><geometry><box><size>0.28 1.30 0.60</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_6'><pose>12.54 4.85 0.36 0 0 0</pose><geometry><box><size>0.28 1.30 0.72</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_6_v'><pose>12.54 4.85 0.36 0 0 0</pose><geometry><box><size>0.28 1.30 0.72</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_7'><pose>12.82 4.85 0.42 0 0 0</pose><geometry><box><size>0.28 1.30 0.84</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_7_v'><pose>12.82 4.85 0.42 0 0 0</pose><geometry><box><size>0.28 1.30 0.84</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_8'><pose>13.10 4.85 0.48 0 0 0</pose><geometry><box><size>0.28 1.30 0.96</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_8_v'><pose>13.10 4.85 0.48 0 0 0</pose><geometry><box><size>0.28 1.30 0.96</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_9'><pose>13.38 4.85 0.54 0 0 0</pose><geometry><box><size>0.28 1.30 1.08</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_9_v'><pose>13.38 4.85 0.54 0 0 0</pose><geometry><box><size>0.28 1.30 1.08</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f1_step_10'><pose>13.66 4.85 0.60 0 0 0</pose><geometry><box><size>0.28 1.30 1.20</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f1_step_10_v'><pose>13.66 4.85 0.60 0 0 0</pose><geometry><box><size>0.28 1.30 1.20</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <!-- 中间休息折返平台 (Landing, z = 1.20m, 1.8m x 3.2m) -->
+        <collision name='landing_deck'>
+          <pose>14.70 5.80 0.60 0 0 0</pose>
+          <geometry><box><size>1.80 3.20 1.20</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='landing_deck_v'>
+          <pose>14.70 5.80 0.60 0 0 0</pose>
+          <geometry><box><size>1.80 3.20 1.20</size></box></geometry>
+          <material><ambient>0.32 0.36 0.40 1</ambient><diffuse>0.32 0.36 0.40 1</diffuse></material>
+        </visual>
+
+        <!-- 平台东向防跌落护栏 -->
+        <collision name='landing_rail_e'>
+          <pose>15.55 5.80 1.70 0 0 0</pose>
+          <geometry><box><size>0.10 3.20 1.00</size></box></geometry>
+        </collision>
+        <visual name='landing_rail_e_v'>
+          <pose>15.55 5.80 1.70 0 0 0</pose>
+          <geometry><box><size>0.10 3.20 1.00</size></box></geometry>
+          <material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material>
+        </visual>
+
+        <!-- 楼梯中立隔离墙 -->
+        <collision name='stair_divider_wall'>
+          <pose>12.40 5.80 1.40 0 0 0</pose>
+          <geometry><box><size>2.80 0.15 1.60</size></box></geometry>
+        </collision>
+        <visual name='stair_divider_wall_v'>
+          <pose>12.40 5.80 1.40 0 0 0</pose>
+          <geometry><box><size>2.80 0.15 1.60</size></box></geometry>
+          <material><ambient>0.40 0.45 0.50 1</ambient><diffuse>0.40 0.45 0.50 1</diffuse></material>
+        </visual>
+
+        <!-- 第二梯跑 Flight 2: 10 阶向西上升至 +2.40m (y in [6.10, 7.40]) -->
+        <collision name='f2_step_11'><pose>13.66 6.75 0.66 0 0 0</pose><geometry><box><size>0.28 1.30 1.32</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_11_v'><pose>13.66 6.75 0.66 0 0 0</pose><geometry><box><size>0.28 1.30 1.32</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_12'><pose>13.38 6.75 0.72 0 0 0</pose><geometry><box><size>0.28 1.30 1.44</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_12_v'><pose>13.38 6.75 0.72 0 0 0</pose><geometry><box><size>0.28 1.30 1.44</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_13'><pose>13.10 6.75 0.78 0 0 0</pose><geometry><box><size>0.28 1.30 1.56</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_13_v'><pose>13.10 6.75 0.78 0 0 0</pose><geometry><box><size>0.28 1.30 1.56</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_14'><pose>12.82 6.75 0.84 0 0 0</pose><geometry><box><size>0.28 1.30 1.68</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_14_v'><pose>12.82 6.75 0.84 0 0 0</pose><geometry><box><size>0.28 1.30 1.68</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_15'><pose>12.54 6.75 0.90 0 0 0</pose><geometry><box><size>0.28 1.30 1.80</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_15_v'><pose>12.54 6.75 0.90 0 0 0</pose><geometry><box><size>0.28 1.30 1.80</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_16'><pose>12.26 6.75 0.96 0 0 0</pose><geometry><box><size>0.28 1.30 1.92</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_16_v'><pose>12.26 6.75 0.96 0 0 0</pose><geometry><box><size>0.28 1.30 1.92</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_17'><pose>11.98 6.75 1.02 0 0 0</pose><geometry><box><size>0.28 1.30 2.04</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_17_v'><pose>11.98 6.75 1.02 0 0 0</pose><geometry><box><size>0.28 1.30 2.04</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_18'><pose>11.70 6.75 1.08 0 0 0</pose><geometry><box><size>0.28 1.30 2.16</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_18_v'><pose>11.70 6.75 1.08 0 0 0</pose><geometry><box><size>0.28 1.30 2.16</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_19'><pose>11.42 6.75 1.14 0 0 0</pose><geometry><box><size>0.28 1.30 2.28</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_19_v'><pose>11.42 6.75 1.14 0 0 0</pose><geometry><box><size>0.28 1.30 2.28</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+
+        <collision name='f2_step_20'><pose>11.14 6.75 1.20 0 0 0</pose><geometry><box><size>0.28 1.30 2.40</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='f2_step_20_v'><pose>11.14 6.75 1.20 0 0 0</pose><geometry><box><size>0.28 1.30 2.40</size></box></geometry><material><ambient>0.85 0.65 0.15 1</ambient><diffuse>0.85 0.65 0.15 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 6. 双垂直通道之【通道二】：西侧校园无障碍连续大跨度坡道 (Accessible Ramp)   -->
+    <!-- 从地面 x=3.5 平缓爬升至二层 x=-4.5 (坡长 8.35m, 跨度 8m, 标高 0 -> 2.40m)   -->
+    <!-- 形成楼梯 vs 坡道双闭环回路，支持拓扑自愈重寻路与通行代价选线验证              -->
+    <!-- ========================================================================= -->
+    <model name='west_accessible_ramp'>
+      <static>true</static>
+      <link name='ramp_link'>
+        <!-- 坡道甲板 (斜率约 16.7°, pitch = +0.2915 rad, 长 8.35m, 宽 1.4m) -->
+        <collision name='ramp_deck'>
+          <pose>-0.5 4.8 1.20 0 0.2915 0</pose>
+          <geometry><box><size>8.35 1.40 0.10</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='ramp_deck_v'>
+          <pose>-0.5 4.8 1.20 0 0.2915 0</pose>
+          <geometry><box><size>8.35 1.40 0.10</size></box></geometry>
+          <material><ambient>0.35 0.55 0.45 1</ambient><diffuse>0.35 0.55 0.45 1</diffuse></material>
+        </visual>
+
+        <!-- 坡道南侧安全护栏 -->
+        <collision name='ramp_rail_s'>
+          <pose>-0.5 4.12 1.65 0 0.2915 0</pose>
+          <geometry><box><size>8.35 0.05 0.80</size></box></geometry>
+        </collision>
+        <visual name='ramp_rail_s_v'>
+          <pose>-0.5 4.12 1.65 0 0.2915 0</pose>
+          <geometry><box><size>8.35 0.05 0.80</size></box></geometry>
+          <material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 7. 二层科研创新与学术研讨复合实验室 (2F Science Lab & Seminar Complex, z=2.4)-->
+    <!-- 占地 15.5m x 7.0m, 分割为机器人创新实验室与学术沙龙研讨室，配有真实高精模型  -->
+    <!-- ========================================================================= -->
+    <model name='campus_2f_architecture'>
+      <static>true</static>
+      <link name='catwalk_deck_link'>
+        <!-- 二层总承重甲板 (Surface at z = 2.40m, 厚度 0.10m, x in [-4.5, 11.0], y in [4.5, 11.5]) -->
+        <collision name='catwalk_deck'>
+          <pose>3.25 8.0 2.35 0 0 0</pose>
+          <geometry><box><size>15.5 7.0 0.10</size></box></geometry>
+          <surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface>
+        </collision>
+        <visual name='catwalk_deck_v'>
+          <pose>3.25 8.0 2.35 0 0 0</pose>
+          <geometry><box><size>15.5 7.0 0.10</size></box></geometry>
+          <material><ambient>0.30 0.33 0.36 1</ambient><diffuse>0.30 0.33 0.36 1</diffuse></material>
+        </visual>
+
+        <!-- 一楼到二楼的承重钢立柱 (8 根立柱) -->
+        <collision name='col_1'><pose>-4.2 5.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry></collision>
+        <visual name='col_1_v'><pose>-4.2 5.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+
+        <collision name='col_2'><pose>-4.2 11.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry></collision>
+        <visual name='col_2_v'><pose>-4.2 11.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+
+        <collision name='col_3'><pose>1.0 5.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry></collision>
+        <visual name='col_3_v'><pose>1.0 5.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+
+        <collision name='col_4'><pose>1.0 11.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry></collision>
+        <visual name='col_4_v'><pose>1.0 11.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+
+        <collision name='col_5'><pose>6.0 5.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry></collision>
+        <visual name='col_5_v'><pose>6.0 5.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+
+        <collision name='col_6'><pose>6.0 11.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry></collision>
+        <visual name='col_6_v'><pose>6.0 11.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+
+        <collision name='col_7'><pose>10.5 5.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry></collision>
+        <visual name='col_7_v'><pose>10.5 5.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+
+        <collision name='col_8'><pose>10.5 11.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry></collision>
+        <visual name='col_8_v'><pose>10.5 11.0 1.15 0 0 0</pose><geometry><box><size>0.25 0.25 2.30</size></box></geometry><material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.25 0.28 0.32 1</diffuse></material></visual>
+
+        <!-- 二层周边安全防护护栏 (高 0.9m) -->
+        <!-- 北侧护栏 -->
+        <collision name='rail_north'><pose>3.25 11.45 2.85 0 0 0</pose><geometry><box><size>15.5 0.10 0.90</size></box></geometry></collision>
+        <visual name='rail_north_v'><pose>3.25 11.45 2.85 0 0 0</pose><geometry><box><size>15.5 0.10 0.90</size></box></geometry><material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material></visual>
+
+        <!-- 西侧护栏 -->
+        <collision name='rail_west'><pose>-4.45 8.0 2.85 0 0 0</pose><geometry><box><size>0.10 7.0 0.90</size></box></geometry></collision>
+        <visual name='rail_west_v'><pose>-4.45 8.0 2.85 0 0 0</pose><geometry><box><size>0.10 7.0 0.90</size></box></geometry><material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material></visual>
+
+        <!-- 南侧护栏 (为楼梯和坡道接入预留开口) -->
+        <collision name='rail_south_mid'><pose>3.25 4.55 2.85 0 0 0</pose><geometry><box><size>7.0 0.10 0.90</size></box></geometry></collision>
+        <visual name='rail_south_mid_v'><pose>3.25 4.55 2.85 0 0 0</pose><geometry><box><size>7.0 0.10 0.90</size></box></geometry><material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material></visual>
+
+        <!-- 二层室内分隔墙 (在 x = 2.5 处分割实验室与自习室，预留 1.2m 门洞过道) -->
+        <!-- 隔墙南段 -->
+        <collision name='room_divider_s'>
+          <pose>2.5 6.0 3.10 0 0 0</pose>
+          <geometry><box><size>0.15 3.0 1.40</size></box></geometry>
+        </collision>
+        <visual name='room_divider_s_v'>
+          <pose>2.5 6.0 3.10 0 0 0</pose>
+          <geometry><box><size>0.15 3.0 1.40</size></box></geometry>
+          <material><ambient>0.5 0.53 0.56 1</ambient><diffuse>0.5 0.53 0.56 1</diffuse></material>
+        </visual>
+
+        <!-- 隔墙北段 (门洞位于 y in [7.5, 8.7]) -->
+        <collision name='room_divider_n'>
+          <pose>2.5 10.1 3.10 0 0 0</pose>
+          <geometry><box><size>0.15 2.7 1.40</size></box></geometry>
+        </collision>
+        <visual name='room_divider_n_v'>
+          <pose>2.5 10.1 3.10 0 0 0</pose>
+          <geometry><box><size>0.15 2.7 1.40</size></box></geometry>
+          <material><ambient>0.5 0.53 0.56 1</ambient><diffuse>0.5 0.53 0.56 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 2F 真实校园科研与沙龙家具模型整合 (利用 src/go2_gazebo_bringup/models/) -->
+    <!-- 【Room 201: 智能机器人创新实验室】(x in [-4.5, 2.5]) -->
+    <include>
+      <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+      <name>lab_workstation_1</name>
+      <pose>-1.5 6.0 2.40 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_warehouse_DeskC_01</uri>
+      <name>lab_workstation_2</name>
+      <pose>-1.5 9.8 2.40 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>lab_chair_1</name>
+      <pose>-1.5 7.0 2.40 0 0 3.1416</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_TVCabinet_01</uri>
+      <name>lab_equipment_bench</name>
+      <pose>-4.1 7.2 2.40 0 0 1.5708</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_ShoeRack_01</uri>
+      <name>lab_parts_rack</name>
+      <pose>-4.1 9.8 2.40 0 0 1.5708</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_warehouse_TrashCanC_01</uri>
+      <name>lab_trash_can</name>
+      <pose>1.5 5.5 2.40 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <!-- 【Room 202: 学术沙龙与自习研讨区】(x in [2.5, 11.0]) -->
+    <include>
+      <uri>model://aws_robomaker_residential_SofaB_01</uri>
+      <name>seminar_sofa_1</name>
+      <pose>6.8 9.8 2.40 0 0 3.1416</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_SofaB_01</uri>
+      <name>seminar_sofa_2</name>
+      <pose>8.8 9.8 2.40 0 0 3.1416</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_CoffeeTable_01</uri>
+      <name>seminar_coffee_table</name>
+      <pose>7.8 8.6 2.40 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_ReadingDesk_01</uri>
+      <name>seminar_reading_desk</name>
+      <pose>5.2 6.0 2.40 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://aws_robomaker_residential_ChairD_01</uri>
+      <name>seminar_chair</name>
+      <pose>5.2 6.8 2.40 0 0 3.1416</pose>
+      <static>true</static>
+    </include>
+
+    <include>
+      <uri>model://cafe_table</uri>
+      <name>seminar_cafe_table</name>
+      <pose>9.2 6.5 2.40 0 0 0</pose>
+      <static>true</static>
+    </include>
+
+    <!-- 二层巡检终端打卡标靶 (Terminal Inspection Target at Room 201) -->
+    <model name='inspection_terminal_beacon'>
+      <static>true</static>
+      <link name='beacon_link'>
+        <collision name='beacon_col'>
+          <pose>-3.5 10.2 2.70 0 0 0</pose>
+          <geometry><cylinder><radius>0.20</radius><length>0.60</length></cylinder></geometry>
+        </collision>
+        <visual name='beacon_vis'>
+          <pose>-3.5 10.2 2.70 0 0 0</pose>
+          <geometry><cylinder><radius>0.20</radius><length>0.60</length></cylinder></geometry>
+          <material><ambient>0.2 0.85 0.35 1</ambient><diffuse>0.2 0.85 0.35 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ========================================================================= -->
+    <!-- 8. Zone B: 侧翼 ASTM E54.09 标准标定消融测试道 (Calibration Lane)            -->
+    <!-- y in [-11.5, -2.5], 标称测试中心线 y = -7.0, 跑道宽度 3.2m                   -->
+    <!-- 保障严密单一变量消融对比 (E2804 阶梯梯度、E2803 连续坡道与 E2828 碎石阵列)    -->
+    <!-- ========================================================================= -->
+    <model name='benchmark_calibration_lane'>
+      <static>true</static>
+      <link name='benchmark_elements'>
+        <!-- ========== [1] ASTM E2804 标准阶梯梯度消融段 (x in [0, 14]) ========== -->
+        <!-- 8cm 标准缓台阶 (3阶上 + 顶台 + 3阶下) -->
+        <collision name='b_step_8cm_u1'><pose>0.7 -7.0 0.04 0 0 0</pose><geometry><box><size>0.35 3.2 0.08</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_8cm_u1_v'><pose>0.7 -7.0 0.04 0 0 0</pose><geometry><box><size>0.35 3.2 0.08</size></box></geometry><material><ambient>0.2 0.7 0.3 1</ambient><diffuse>0.2 0.7 0.3 1</diffuse></material></visual>
+
+        <collision name='b_step_8cm_u2'><pose>1.05 -7.0 0.08 0 0 0</pose><geometry><box><size>0.35 3.2 0.16</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_8cm_u2_v'><pose>1.05 -7.0 0.08 0 0 0</pose><geometry><box><size>0.35 3.2 0.16</size></box></geometry><material><ambient>0.2 0.7 0.3 1</ambient><diffuse>0.2 0.7 0.3 1</diffuse></material></visual>
+
+        <collision name='b_step_8cm_u3'><pose>1.40 -7.0 0.12 0 0 0</pose><geometry><box><size>0.35 3.2 0.24</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_8cm_u3_v'><pose>1.40 -7.0 0.12 0 0 0</pose><geometry><box><size>0.35 3.2 0.24</size></box></geometry><material><ambient>0.2 0.7 0.3 1</ambient><diffuse>0.2 0.7 0.3 1</diffuse></material></visual>
+
+        <collision name='b_step_8cm_plat'><pose>2.15 -7.0 0.12 0 0 0</pose><geometry><box><size>1.15 3.2 0.24</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_8cm_plat_v'><pose>2.15 -7.0 0.12 0 0 0</pose><geometry><box><size>1.15 3.2 0.24</size></box></geometry><material><ambient>0.25 0.75 0.35 1</ambient><diffuse>0.25 0.75 0.35 1</diffuse></material></visual>
+
+        <collision name='b_step_8cm_d1'><pose>2.90 -7.0 0.08 0 0 0</pose><geometry><box><size>0.35 3.2 0.16</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_8cm_d1_v'><pose>2.90 -7.0 0.08 0 0 0</pose><geometry><box><size>0.35 3.2 0.16</size></box></geometry><material><ambient>0.2 0.7 0.3 1</ambient><diffuse>0.2 0.7 0.3 1</diffuse></material></visual>
+
+        <collision name='b_step_8cm_d2'><pose>3.25 -7.0 0.04 0 0 0</pose><geometry><box><size>0.35 3.2 0.08</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_8cm_d2_v'><pose>3.25 -7.0 0.04 0 0 0</pose><geometry><box><size>0.35 3.2 0.08</size></box></geometry><material><ambient>0.2 0.7 0.3 1</ambient><diffuse>0.2 0.7 0.3 1</diffuse></material></visual>
+
+        <!-- 12cm 标准工业台阶 (3阶上 + 顶台 + 3阶下) -->
+        <collision name='b_step_12cm_u1'><pose>4.6 -7.0 0.06 0 0 0</pose><geometry><box><size>0.40 3.2 0.12</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_12cm_u1_v'><pose>4.6 -7.0 0.06 0 0 0</pose><geometry><box><size>0.40 3.2 0.12</size></box></geometry><material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material></visual>
+
+        <collision name='b_step_12cm_u2'><pose>5.0 -7.0 0.12 0 0 0</pose><geometry><box><size>0.40 3.2 0.24</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_12cm_u2_v'><pose>5.0 -7.0 0.12 0 0 0</pose><geometry><box><size>0.40 3.2 0.24</size></box></geometry><material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material></visual>
+
+        <collision name='b_step_12cm_u3'><pose>5.4 -7.0 0.18 0 0 0</pose><geometry><box><size>0.40 3.2 0.36</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_12cm_u3_v'><pose>5.4 -7.0 0.18 0 0 0</pose><geometry><box><size>0.40 3.2 0.36</size></box></geometry><material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material></visual>
+
+        <collision name='b_step_12cm_plat'><pose>6.25 -7.0 0.18 0 0 0</pose><geometry><box><size>1.30 3.2 0.36</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_12cm_plat_v'><pose>6.25 -7.0 0.18 0 0 0</pose><geometry><box><size>1.30 3.2 0.36</size></box></geometry><material><ambient>0.90 0.70 0.15 1</ambient><diffuse>0.90 0.70 0.15 1</diffuse></material></visual>
+
+        <collision name='b_step_12cm_d1'><pose>7.1 -7.0 0.12 0 0 0</pose><geometry><box><size>0.40 3.2 0.24</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_12cm_d1_v'><pose>7.1 -7.0 0.12 0 0 0</pose><geometry><box><size>0.40 3.2 0.24</size></box></geometry><material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material></visual>
+
+        <collision name='b_step_12cm_d2'><pose>7.5 -7.0 0.06 0 0 0</pose><geometry><box><size>0.40 3.2 0.12</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_12cm_d2_v'><pose>7.5 -7.0 0.06 0 0 0</pose><geometry><box><size>0.40 3.2 0.12</size></box></geometry><material><ambient>0.85 0.65 0.1 1</ambient><diffuse>0.85 0.65 0.1 1</diffuse></material></visual>
+
+        <!-- 15cm 极限越障台阶 (2阶上 + 顶台 + 2阶下) -->
+        <collision name='b_step_15cm_u1'><pose>8.9 -7.0 0.075 0 0 0</pose><geometry><box><size>0.45 3.2 0.15</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_15cm_u1_v'><pose>8.9 -7.0 0.075 0 0 0</pose><geometry><box><size>0.45 3.2 0.15</size></box></geometry><material><ambient>0.92 0.45 0.1 1</ambient><diffuse>0.92 0.45 0.1 1</diffuse></material></visual>
+
+        <collision name='b_step_15cm_u2'><pose>9.35 -7.0 0.15 0 0 0</pose><geometry><box><size>0.45 3.2 0.30</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_15cm_u2_v'><pose>9.35 -7.0 0.15 0 0 0</pose><geometry><box><size>0.45 3.2 0.30</size></box></geometry><material><ambient>0.92 0.45 0.1 1</ambient><diffuse>0.92 0.45 0.1 1</diffuse></material></visual>
+
+        <collision name='b_step_15cm_plat'><pose>10.25 -7.0 0.15 0 0 0</pose><geometry><box><size>1.35 3.2 0.30</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_15cm_plat_v'><pose>10.25 -7.0 0.15 0 0 0</pose><geometry><box><size>1.35 3.2 0.30</size></box></geometry><material><ambient>0.95 0.50 0.15 1</ambient><diffuse>0.95 0.50 0.15 1</diffuse></material></visual>
+
+        <collision name='b_step_15cm_d1'><pose>11.15 -7.0 0.075 0 0 0</pose><geometry><box><size>0.45 3.2 0.15</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_15cm_d1_v'><pose>11.15 -7.0 0.075 0 0 0</pose><geometry><box><size>0.45 3.2 0.15</size></box></geometry><material><ambient>0.92 0.45 0.1 1</ambient><diffuse>0.92 0.45 0.1 1</diffuse></material></visual>
+
+        <!-- 28cm 致命阻挡墙 (Lethal 254 截断测试) -->
+        <collision name='b_step_28cm_lethal'><pose>12.8 -7.0 0.14 0 0 0</pose><geometry><box><size>0.6 3.2 0.28</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_step_28cm_lethal_v'><pose>12.8 -7.0 0.14 0 0 0</pose><geometry><box><size>0.6 3.2 0.28</size></box></geometry><material><ambient>0.85 0.1 0.1 1</ambient><diffuse>0.85 0.1 0.1 1</diffuse></material></visual>
+
+        <!-- ========== [2] ASTM E2803 规范连续坡道测试段 (x in [14.5, 21.0]) ========== -->
+        <!-- 15° 连续缓坡桥 (run=1.8m, rise=0.48m, pitch=-0.2618 rad) -->
+        <collision name='b_ramp_15_up'><pose>15.2 -7.0 0.24 0 -0.2618 0</pose><geometry><box><size>1.86 3.2 0.08</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_ramp_15_up_v'><pose>15.2 -7.0 0.24 0 -0.2618 0</pose><geometry><box><size>1.86 3.2 0.08</size></box></geometry><material><ambient>0.2 0.7 0.3 1</ambient><diffuse>0.2 0.7 0.3 1</diffuse></material></visual>
+
+        <collision name='b_ramp_15_plat'><pose>16.8 -7.0 0.24 0 0 0</pose><geometry><box><size>1.40 3.2 0.48</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_ramp_15_plat_v'><pose>16.8 -7.0 0.24 0 0 0</pose><geometry><box><size>1.40 3.2 0.48</size></box></geometry><material><ambient>0.25 0.75 0.35 1</ambient><diffuse>0.25 0.75 0.35 1</diffuse></material></visual>
+
+        <collision name='b_ramp_15_down'><pose>18.4 -7.0 0.24 0 0.2618 0</pose><geometry><box><size>1.86 3.2 0.08</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_ramp_15_down_v'><pose>18.4 -7.0 0.24 0 0.2618 0</pose><geometry><box><size>1.86 3.2 0.08</size></box></geometry><material><ambient>0.2 0.7 0.3 1</ambient><diffuse>0.2 0.7 0.3 1</diffuse></material></visual>
+
+        <!-- 22° 连续陡坡桥 (run=1.8m, rise=0.73m, pitch=-0.384 rad) -->
+        <collision name='b_ramp_22_up'><pose>21.0 -7.0 0.365 0 -0.384 0</pose><geometry><box><size>1.94 3.2 0.08</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_ramp_22_up_v'><pose>21.0 -7.0 0.365 0 -0.384 0</pose><geometry><box><size>1.94 3.2 0.08</size></box></geometry><material><ambient>0.9 0.5 0.1 1</ambient><diffuse>0.9 0.5 0.1 1</diffuse></material></visual>
+
+        <collision name='b_ramp_22_plat'><pose>22.6 -7.0 0.365 0 0 0</pose><geometry><box><size>1.30 3.2 0.73</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_ramp_22_plat_v'><pose>22.6 -7.0 0.365 0 0 0</pose><geometry><box><size>1.30 3.2 0.73</size></box></geometry><material><ambient>0.95 0.55 0.15 1</ambient><diffuse>0.95 0.55 0.15 1</diffuse></material></visual>
+
+        <collision name='b_ramp_22_down'><pose>24.2 -7.0 0.365 0 0.384 0</pose><geometry><box><size>1.94 3.2 0.08</size></box></geometry><surface><friction><ode><mu>1.5</mu><mu2>1.5</mu2></ode></friction></surface></collision>
+        <visual name='b_ramp_22_down_v'><pose>24.2 -7.0 0.365 0 0.384 0</pose><geometry><box><size>1.94 3.2 0.08</size></box></geometry><material><ambient>0.9 0.5 0.1 1</ambient><diffuse>0.9 0.5 0.1 1</diffuse></material></visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

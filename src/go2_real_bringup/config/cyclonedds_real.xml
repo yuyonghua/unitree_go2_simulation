@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CycloneDDS>
+  <Domain Id="any">
+    <General>
+      <Interfaces>
+        <!-- 把下面的网卡名换成你连狗的那块（ip a 查）；仿真那份绑 lo，别混用 -->
+        <NetworkInterface name="enx6c1ff75fac3f" priority="default" multicast="default" />
+        <!-- 兜底：USB 网卡抖动/掉线时，本地节点仍可经 lo 互相发现，
+             避免整个 DDS 域僵死（RViz 未响应、关不掉、只能 SIGKILL）。
+             注意：lo 通不了狗，掉网卡后狗数据还是会断，但本地栈可调试、可正常退出 -->
+        <NetworkInterface name="lo" priority="default" multicast="true" />
+      </Interfaces>
+    </General>
+  </Domain>
+</CycloneDDS>

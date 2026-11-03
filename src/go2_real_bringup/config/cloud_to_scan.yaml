@@ -1,0 +1,17 @@
+/**:
+  cloud_to_scan:
+    ros__parameters:
+      target_frame: base_link
+      # 实测点云投影到 base_link 后集中在 z≈-0.20（地面约 -0.28）；
+      # 原 min_height -0.10 切掉 94% 点云，仅剩 5.6%（219/3892）。下限放到 -0.25
+      # 刚好含住主瓣又排除地面杂波；上限 0.5 含墙体、排除天花板。
+      transform_tolerance: 0.3
+      min_height: -0.25
+      max_height: 0.50
+      angle_min: -1.7453
+      angle_max: 1.7453
+      angle_increment: 0.0087
+      # L1 近场盲区实测 0.3m（日志：capabilities 0.3m），与 slam min_laser_range 对齐
+      range_min: 0.30
+      range_max: 10.0
+      use_inf: true
