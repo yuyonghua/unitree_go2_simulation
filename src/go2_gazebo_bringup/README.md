@@ -10,8 +10,8 @@
 1. **自适应软着陆 (Soft-Landing Protocol)**：
    - 机器狗初始化时四肢处于笔直僵直（straight legs）状态，若从常规高度（如 0.8m）自由落体极易发生剧烈弹跳翻车。
    - 内置 `WORLD_SPAWN_CONFIG` 矩阵，默认自动将机器狗平稳生成在 `z=0.45m` 触地平衡点，彻底消除落地弹跳翻车。
-2. **基准赛道一键就位 (`track:=S1|S2|S3|S4`)**：
-   - 内置 `BENCHMARK_TRACKS`，支持在 `benchmark_calibration_world.sdf` 中一键将机器狗放置于各实验分赛道起点。
+2. **多场景即开即用 (5 大精选场景)**：
+   - 内置仓储、医院标准走廊、医院全要素复杂场景、办公室内景、阶梯大空间 5 款核心物理世界模型。
 3. **单发布者 TF 保护**：
    - 支持通过 `enable_ekf:=false` 彻底关闭 `robot_localization` EKF 节点，以便在 3D 模式下由 Point-LIO 50Hz 独占广播 `odom -> base_link`。
 
@@ -20,25 +20,32 @@
 ## 快速使用 (Usage)
 
 ```bash
-# 1. 默认仓库世界 (warehouse.sdf)
+# 1. 默认仓储场景 (warehouse.sdf，软着陆自适应)
 ros2 launch go2_gazebo_bringup gazebo.launch.py
 
-# 2. 巡检越障世界 (关闭 EKF 以配合 3D SLAM 或 MPPI 导航)
-ros2 launch go2_gazebo_bringup gazebo.launch.py world:=inspection_obstacle_world.sdf enable_ekf:=false
+# 2. 医院标准巡检场景 (hospital.sdf，自带宽走廊安全位姿)
+ros2 launch go2_gazebo_bringup gazebo.launch.py world:=hospital.sdf
 
-# 3. 基准标定世界 (指定分赛道 S1 越障高度敏感性)
-ros2 launch go2_gazebo_bringup gazebo.launch.py world:=benchmark_calibration_world.sdf track:=S1 enable_ekf:=false
+# 3. 教学楼多层阶梯 3D 场景 (关闭 EKF 避免 TF 冲突，挂载外置 360° 雷达)
+ros2 launch go2_gazebo_bringup gazebo.launch.py world:=academic_building_world.sdf use_external_lidar:=true enable_ekf:=false
+
+# 4. 无桌面/服务器纯后台运行 (Headless 极速模式，省显存防崩溃)
+ros2 launch go2_gazebo_bringup gazebo.launch.py headless:=true
 ```
 
 ---
 
-## 常用参数 (Launch Arguments)
+## 启动参数详表 (Launch Arguments)
 
-| 参数名 | 默认值 | 说明 |
-| :--- | :--- | :--- |
-| `world` | `warehouse.sdf` | 仿真世界文件名称（位于 `worlds/` 下） |
-| `enable_ekf` | `true` | 是否启动 2D 轮式+IMU EKF 滤波节点（3D 模式必须设为 `false`） |
-| `use_external_lidar` | `false` | 是否挂载外置 360° 激光雷达（默认仅使用前置 L1） |
-| `rviz` | `false` | 是否同时拉起基础 RViz2 监控面板 |
-| `track` | `''` | 基准分赛道选择（如 `S1`, `S2`, `S3_18`, `S4`） |
-| `x / y / z / yaw` | `auto` | 出生点位姿覆盖（默认按场景自适应匹配） |
+| 参数名 | 默认值 | 类型 / 可选值 | 说明 |
+| :--- | :--- | :--- | :--- |
+| `world` | `warehouse.sdf` | `warehouse.sdf` \| `hospital.sdf` \| `hospital_full.sdf` \| `cpr_office.sdf` \| `academic_building_world.sdf` | 仿真世界文件名称（位于 `worlds/` 目录下） |
+| `headless` | `false` | `true` \| `false` | 是否以无 GUI 纯服务端模式运行 Gazebo（CI/服务器/低显存首选） |
+| `use_external_lidar`| `false` | `true` \| `false` | 是否加载背部外置 360° 激光雷达（默认 false 仅使用机嘴倒装 L1 雷达） |
+| `rviz` | `false` | `true` \| `false` | 是否自动启动 RViz2 监控（配置文件随 `use_external_lidar` 自动切换） |
+| `enable_ekf` | `true` | `true` \| `false` | 是否启动 EKF 滤波节点（默认 `true` 开启 2D 滤波；使用 3D 点云里程计如 Point-LIO 时设为 `false` 防 TF 冲突） |
+| `x` | `auto` | 浮点数 (米) \| `auto` | 出生点 X 坐标覆盖（`auto` 表示按世界预设自适应软着陆） |
+| `y` | `auto` | 浮点数 (米) \| `auto` | 出生点 Y 坐标覆盖（`auto` 表示按世界预设自适应软着陆） |
+| `z` | `auto` | 浮点数 (米) \| `auto` | 出生点 Z 高度覆盖（`auto` 默认 `0.45m` 触地保护） |
+| `yaw` | `auto` | 弧度制 \| `auto` | 出生朝向偏航角覆盖（`auto` 表示按世界预设方向） |
+| `use_sim_time` | `true` | `true` \| `false` | 全局仿真时钟开关（驱动全链路 `/clock` 时间同步） |

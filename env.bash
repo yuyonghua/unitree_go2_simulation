@@ -19,3 +19,7 @@ export GZ_SIM_RESOURCE_PATH="$DIR/src/go2_gazebo_bringup/worlds:$DIR/src/go2_gaz
 export SDF_PATH="$DIR/src/go2_gazebo_bringup/models:$SDF_PATH"
 export GZ_SIM_SYSTEM_PLUGIN_PATH="/opt/ros/humble/lib"
 export IGN_GAZEBO_SYSTEM_PLUGIN_PATH="/opt/ros/humble/lib"
+
+# 5. 开启 NVIDIA 独显硬解加速，释放 CPU 算力
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia

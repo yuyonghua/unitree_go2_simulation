@@ -2,7 +2,7 @@
 # yaw_check.py：静止 10 秒，量化 yaw 漂移到底来自哪一段
 #
 # 用法（在连狗、跑着 real.launch.py 的机器上）：
-#   source env.sh && source install/setup.bash
+#   source env.bash && source install/setup.bash
 #   python3 src/go2_real_bringup/scripts/yaw_check.py
 #   # 狗保持静止站立 10 秒，不要碰
 #

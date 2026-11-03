@@ -3,9 +3,10 @@
 <package format="3">
   <name>go2_gazebo_bringup</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="yyhstd@qq.com">user</maintainer>
-  <license>BSD</license>
+  <description>Gazebo Fortress simulation bringup and world environments for Unitree Go2</description>
+  <maintainer email="yyhstd@qq.com">Unitree GO2 Project</maintainer>
+  <author email="yanyuze@foxmail.com">yanyuze1</author>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

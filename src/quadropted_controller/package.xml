@@ -2,9 +2,12 @@
 <package format="3">
   <name>quadropted_controller</name>
   <version>0.0.1</version>
-  <description>quadropted robot controller package</description>
+  <description>Quadruped robot kinematics and gait controller package for Gazebo simulation</description>
 
-  <maintainer email="kaisar.abutalipovv@gmail.com">Your Name</maintainer>
+  <maintainer email="yyhstd@qq.com">Unitree GO2 Project</maintainer>
+  <author email="kaisar.abutalipovv@gmail.com">abutalipovvv</author>
+  <author>lnotspotl</author>
+  <author>mike4192</author>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
