@@ -35,16 +35,16 @@ class RobotVelocityHandler(Node):
         self.declare_parameter('scale_x', 0.0776)
         self.declare_parameter('scale_y', 0.104)
         self.declare_parameter('scale_yaw', 0.40)
-        self.declare_parameter('max_x', 0.045)
+        self.declare_parameter('max_x', 0.055)
         self.declare_parameter('max_y', 0.025)
-        self.declare_parameter('max_yaw', 0.50)
+        self.declare_parameter('max_yaw', 0.65)
 
         # 加减速平滑斜率 (Slew-Rate Limiter)
         self.declare_parameter('enable_slew_rate', True)
         self.declare_parameter('accel_limit_x', 0.60)     # m/s^2 对地等效加速度
         self.declare_parameter('accel_limit_y', 0.60)     # m/s^2 对地等效横向加速度
         self.declare_parameter('accel_limit_yaw', 1.50)   # rad/s^2 角加速度
-        self.declare_parameter('cmd_timeout', 0.50)       # 指令超时自动减速回零
+        self.declare_parameter('cmd_timeout', 0.0)        # 默认 0.0：启用键盘巡航锁存，无需长按按键；>0 时超时自动减速回零
 
         # 内部状态
         self.target_x = 0.0
@@ -83,9 +83,9 @@ class RobotVelocityHandler(Node):
         if dt <= 0.0 or dt > 0.5:
             dt = 0.02
 
-        # 超时保护：超过 cmd_timeout 未收到 cmd_vel，目标速度归零
+        # 超时保护：cmd_timeout > 0 时生效，超过未收到 cmd_vel 则目标速度归零
         cmd_timeout = self.get_parameter('cmd_timeout').get_parameter_value().double_value
-        if (now - self.last_cmd_time).nanoseconds / 1e9 > cmd_timeout:
+        if cmd_timeout > 0.0 and (now - self.last_cmd_time).nanoseconds / 1e9 > cmd_timeout:
             self.target_x = 0.0
             self.target_y = 0.0
             self.target_z = 0.0

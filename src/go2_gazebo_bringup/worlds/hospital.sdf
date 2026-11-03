@@ -7,27 +7,27 @@
     </physics>
 
     <!-- Gazebo Fortress / Harmonic Core System Plugins -->
-    <plugin filename="libignition-gazebo6-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
-    <plugin filename="libignition-gazebo6-physics-system.so" name="ignition::gazebo::systems::Physics"/>
-    <plugin filename="libignition-gazebo6-user-commands-system.so" name="ignition::gazebo::systems::UserCommands"/>
-    <plugin filename="libignition-gazebo6-scene-broadcaster-system.so" name="ignition::gazebo::systems::SceneBroadcaster"/>
-    <plugin filename="libignition-gazebo6-contact-system.so" name="ignition::gazebo::systems::Contact"/>
-    <plugin filename="libignition-gazebo6-imu-system.so" name="ignition::gazebo::systems::Imu"/>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
 
     <scene>
-      <ambient>0.65 0.65 0.65 1.0</ambient>
-      <background>0.75 0.75 0.75 1.0</background>
+      <ambient>0.32 0.32 0.35 1.0</ambient>
+      <background>0.7 0.78 0.88 1.0</background>
       <grid>false</grid>
     </scene>
 
-    <!-- Sun Light Source -->
+    <!-- 主太阳光 (主走廊与窗户入射光，保留真实阴影) -->
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
       <pose>0 0 30 0 0 0</pose>
-      <diffuse>0.92 0.92 0.92 1</diffuse>
-      <specular>0.25 0.25 0.25 1</specular>
+      <diffuse>0.85 0.85 0.85 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
       <attenuation>
         <range>1000</range>
         <constant>0.9</constant>
@@ -35,6 +35,15 @@
         <quadratic>0.001</quadratic>
       </attenuation>
       <direction>-0.35 0.25 -0.9</direction>
+    </light>
+
+    <!-- 室内全域漫反射柔光 (穿透天花板均匀补光，无阴影，杜绝死黑与泛白) -->
+    <light type="directional" name="hospital_diffuse_fill">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.50 0.50 0.52 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+      <direction>0.2 -0.2 -1.0</direction>
     </light>
 
     <!-- Rigid Ground Plane (Safety Catch Plane at z = -0.1 to avoid z-fighting with hospital floor mesh) -->
