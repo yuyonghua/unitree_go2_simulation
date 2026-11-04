@@ -8,6 +8,12 @@
   <xacro:arg name="robot_name" default="robot1"/>
   <xacro:arg name="use_external_lidar" default="false"/>
   <xacro:arg name="use_gazebo" default="true"/>
+  <xacro:arg name="lidar_x" default="0.335"/>
+  <xacro:arg name="lidar_y" default="0.0"/>
+  <xacro:arg name="lidar_z" default="-0.046825"/>
+  <xacro:arg name="lidar_roll" default="0.0"/>
+  <xacro:arg name="lidar_pitch" default="2.8782"/>
+  <xacro:arg name="lidar_yaw" default="0.0"/>
   <xacro:if value="$(arg use_gazebo)">
     <xacro:go2_gazebo robot_name="$(arg robot_name)"/>
   </xacro:if>
@@ -27,7 +33,7 @@
   </link>
   <joint name="lidar_joint" type="fixed">
     <parent link="trunk"/><child link="lidar"/>
-    <origin xyz="0.28945 0.0 -0.046825" rpy="0.0 2.8782 0.0"/>
+    <origin xyz="$(arg lidar_x) $(arg lidar_y) $(arg lidar_z)" rpy="$(arg lidar_roll) $(arg lidar_pitch) $(arg lidar_yaw)"/>
   </joint>
   <link name="lidar"/>
   <joint name="utlidar_lidar_joint" type="fixed">

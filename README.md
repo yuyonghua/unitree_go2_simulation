@@ -22,7 +22,7 @@ go2_base_ws/src/
 
 ### 1. 环境变量加载
 ```bash
-cd /home/user/git/yyh/go2_base_ws
+# 在工作空间根目录下执行
 source env.bash
 ```
 
@@ -106,6 +106,35 @@ ros2 launch go2_gazebo_bringup gazebo.launch.py world:=warehouse.sdf x:=2.5 y:=-
 
 ---
 
+### 4. 机器狗运控与键盘遥控操作 (Behavior & Teleop Control)
+
+仿真启动就绪后（终端 1 已输出控制器加载完成），打开新终端执行以下指令控制机器狗运动：
+
+#### ① 站立与步态使能 (Behavior Command)
+```bash
+# 1. 唤醒机器人并站立 (软着陆姿态 -> 预备站立)
+ros2 service call /robot1/robot_behavior_command quadropted_msgs/srv/RobotBehaviorCommand "{command: up}"
+
+# 2. 切换至动态 Trot 行走步态 (解除静止锁定，准备接收速度指令)
+ros2 service call /robot1/robot_behavior_command quadropted_msgs/srv/RobotBehaviorCommand "{command: walk}"
+
+# 3. [可选] 坐下休息姿态 (归零复位)
+ros2 service call /robot1/robot_behavior_command quadropted_msgs/srv/RobotBehaviorCommand "{command: sit}"
+```
+
+#### ② 键盘遥控走动 (Keyboard Teleop)
+在独立终端运行键盘控制节点，将速度话题重映射至 `/robot1/cmd_vel`：
+```bash
+# 安装键盘遥控包 (若尚未安装: sudo apt install ros-humble-teleop-twist-keyboard)
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/robot1/cmd_vel
+```
+> **键盘操控提示**：
+> - `i`：向前走；`,`：向后退；`j`：向左自转；`l`：向右自转；`u` / `o`：左转 / 右转前行；
+> - `k`：急停驻车；`q` / `z`：线性加减速档位（建议先按 `z` 将速度降到 0.2~0.3m/s 体验更平稳）；
+> - `cmd_vel_pub` 节点已内置 Slew-Rate 加减速度平滑器与地面响应比缩放，按键响应平稳防翻车。
+
+---
+
 ## 🐕 实体机器狗硬件底座 (`go2_real_bringup`)
 
 若需要连接真实的 Unitree Go2 实体狗底盘：
@@ -116,6 +145,11 @@ ping 192.168.123.161
 
 # 2. 启动真机底座（含 SDK2 桥接驱动、时钟时间戳重赋、雷达外参静态 TF 与关节状态监控）
 ros2 launch go2_real_bringup real.launch.py
+
+# 3. 真机运控与遥控（与仿真接口 100% 保持一致）
+# 切换至 walk 模式或直接发 cmd_vel（sport_translator 支持收到速度自动切入 walk）：
+ros2 service call /robot1/robot_behavior_command quadropted_msgs/srv/RobotBehaviorCommand "{command: walk}"
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/robot1/cmd_vel
 ```
 
 ---

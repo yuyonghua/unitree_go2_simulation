@@ -36,11 +36,7 @@ class RobotControllerNode(Node):
         
         self.joint_command_publisher = self.create_publisher(Float64MultiArray, "joint_group_controller/commands", 10)
 
-        
-        self.create_subscription(RobotModeCommand, "robot_mode", self.robot.mode_callback, 10)
-        self.create_subscription(RobotVelocity, "robot_velocity", self.robot.velocity_callback, 10)
-
-        
+        # 注：robot_mode 与 robot_velocity 订阅已由 self.robot 内部统一管理，此处不重复订阅
         self.timer = self.create_timer(1.0 / RATE, self.control_loop)
 
     def control_loop(self):

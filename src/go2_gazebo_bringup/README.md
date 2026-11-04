@@ -33,6 +33,21 @@ ros2 launch go2_gazebo_bringup gazebo.launch.py world:=academic_building_world.s
 ros2 launch go2_gazebo_bringup gazebo.launch.py headless:=true
 ```
 
+### 运控交互与键盘遥控 (Behavior & Teleop Control)
+
+仿真启动完成后，在另外的终端执行以下命令控制机器狗：
+
+```bash
+# 终端 2: 唤醒并站立
+ros2 service call /robot1/robot_behavior_command quadropted_msgs/srv/RobotBehaviorCommand "{command: up}"
+
+# 终端 2: 切换进入 Trot 动态行走步态
+ros2 service call /robot1/robot_behavior_command quadropted_msgs/srv/RobotBehaviorCommand "{command: walk}"
+
+# 终端 3: 键盘遥控机器狗走动
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/robot1/cmd_vel
+```
+
 ---
 
 ## 启动参数详表 (Launch Arguments)

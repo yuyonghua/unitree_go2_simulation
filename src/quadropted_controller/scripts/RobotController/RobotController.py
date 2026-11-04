@@ -8,6 +8,7 @@ from .TrotGaitController import TrotGaitController
 from .CrawlGaitController import CrawlGaitController
 from .StandController import StandController
 from geometry_msgs.msg import Twist
+from sensor_msgs.msg import Imu
 from quadropted_msgs.msg import RobotModeCommand, RobotVelocity
 from quadropted_msgs.srv import RobotBehaviorCommand
 class Robot:
@@ -54,11 +55,26 @@ class Robot:
         self.node.create_subscription(RobotModeCommand, 'robot_mode', self.mode_callback, 10)
         self.node.create_subscription(RobotVelocity, 'robot_velocity', self.velocity_callback, 10)
 
+        # 姿态自平衡安全开关：默认关闭（保持开环 Trot 稳定），支持参数开启
+        self.node.declare_parameter('enable_imu_balance', False)
+        self.enable_imu_balance = self.node.get_parameter('enable_imu_balance').value
+        self.node.create_subscription(Imu, 'imu_plugin/out', self.imu_callback, 10)
+
         self.behavior_service = self.node.create_service(
             RobotBehaviorCommand,
             'robot_behavior_command',
             self.handle_behavior_command
         )
+
+    def imu_callback(self, msg: Imu):
+        if not self.enable_imu_balance:
+            return
+        q = msg.orientation
+        sinr_cosp = 2.0 * (q.w * q.x + q.y * q.z)
+        cosr_cosp = 1.0 - 2.0 * (q.x * q.x + q.y * q.y)
+        self.state.imu_roll = np.arctan2(sinr_cosp, cosr_cosp)
+        sinp = 2.0 * (q.w * q.y - q.z * q.x)
+        self.state.imu_pitch = np.arcsin(np.clip(sinp, -1.0, 1.0))
 
     def mode_callback(self, msg):
         

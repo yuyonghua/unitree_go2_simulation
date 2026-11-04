@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Author: lnotspotl, abutalipovvv
 import rclpy
-from rclpy.time import Time
+import time
 import numpy as np
 
 class PID_controller:
@@ -61,4 +61,4 @@ class PID_controller:
         self.desired_roll_pitch = np.array([des_roll, des_pitch])
 
     def get_time_in_seconds(self):
-        return Time().seconds_nanoseconds()[0] + Time().seconds_nanoseconds()[1] * 1e-9
+        return time.monotonic()

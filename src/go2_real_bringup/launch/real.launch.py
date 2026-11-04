@@ -46,27 +46,26 @@ def _nodes(context: LaunchContext, *args, **kwargs):
                   ('/scan', 'scan'), ('/odom', 'odometry/filtered')]
 
     # --- 1. 纯模型（不要 gazebo 插件/摩擦/ros2_control 描述）---
+    # 雷达外参统一由 xacro 传参注入，由 robot_state_publisher 单点发布 TF，彻底杜绝 TF 多父竞争
     desc_pkg = get_package_share_directory('go2_description')
     robot_desc = xacro.process_file(
         os.path.join(desc_pkg, 'xacro', 'robot.xacro'),
         mappings={'robot_name': ns,
                   'use_external_lidar': 'false',
-                  'use_gazebo': 'false'}).toxml()
+                  'use_gazebo': 'false',
+                  'lidar_x': lx,
+                  'lidar_y': ly,
+                  'lidar_z': lz,
+                  'lidar_roll': lroll,
+                  'lidar_pitch': lpitch,
+                  'lidar_yaw': lyaw}).toxml()
     rsp = Node(package='robot_state_publisher', executable='robot_state_publisher',
                namespace=ns, output='screen',
                parameters=[{'robot_description': robot_desc,
                             'use_sim_time': use_sim_time}],
                remappings=remappings)
 
-    # --- 2. 静态 TF 广播：将点云坐标系 utlidar_lidar 绑定到 base_link ---
-    # 采用显式命名参数，避免位置参数引起的轴向解析混乱
-    lidar_tf = Node(package='tf2_ros', executable='static_transform_publisher',
-                    name='utlidar_static_tf', namespace=ns, output='screen',
-                    arguments=['--x', lx, '--y', ly, '--z', lz,
-                               '--roll', lroll, '--pitch', lpitch, '--yaw', lyaw,
-                               '--frame-id', 'base_link',
-                               '--child-frame-id', 'utlidar_lidar'],
-                    remappings=remappings)
+    # --- 2. 静态 TF 说明：utlidar_lidar 静态 TF 已由 xacro + robot_state_publisher 统一发布 ---
 
     # --- 3. 点云本地时间戳重赋节点：抹平狗机载时钟与 PC 本地的时钟差 ---
     restamp = Node(package='go2_real_bringup', executable='cloud_restamp.py',
@@ -122,6 +121,7 @@ def _nodes(context: LaunchContext, *args, **kwargs):
     # --- 8. 关节状态桥接：订阅机载 /lowstate 发布 /robot1/joint_states，补全腿部 12 关节 TF ---
     joint_bridge = Node(package='go2_real_bringup', executable='joint_state_bridge.py',
                         name='joint_state_bridge', namespace=ns, output='screen',
+                        parameters=[{'use_sim_time': use_sim_time}],
                         remappings=remappings)
 
     # --- 9. RViz：启动真机专属配置（Fixed Frame=base_link, Best Effort QoS）---
@@ -132,7 +132,7 @@ def _nodes(context: LaunchContext, *args, **kwargs):
                 remappings=remappings,
                 condition=IfCondition(LaunchConfiguration('rviz')))
 
-    return [rsp, joint_bridge, lidar_tf, restamp, accumulate, translator, odom, laser, ekf, rviz]
+    return [rsp, joint_bridge, restamp, accumulate, translator, odom, laser, ekf, rviz]
 
 
 def generate_launch_description():

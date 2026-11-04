@@ -1,7 +1,7 @@
 # 看模型（静态）：只起 robot_state_publisher + 关节滑杆 + RViz，不碰 Gazebo
 #
 # 用法：
-#   cd ~/git/yyh/go2_ws && colcon build --packages-select go2_description && source install/setup.bash
+#   colcon build --packages-select go2_description && source install/setup.bash
 #   ros2 launch go2_description display.launch.py                      # 只看内置 L1
 #   ros2 launch go2_description display.launch.py use_external_lidar:=true  # 加挂外置 360° 雷达
 #

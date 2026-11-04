@@ -83,7 +83,8 @@ class CrawlSwingController:
     def raibert_touchdown_location(self, leg_index, command, shifted_left):
         delta_pos_2d = command.velocity * self.phase_length * self.time_step
         delta_pos = np.array([delta_pos_2d[0], delta_pos_2d[1], 0])
-        theta = self.stance_ticks * self.time_step * command.yaw_rate
+        yaw_val = command.yaw_rate[2] if hasattr(command.yaw_rate, '__getitem__') else command.yaw_rate
+        theta = self.stance_ticks * self.time_step * yaw_val
         rotation = rotz(theta)
 
         shift_correction = np.array([0., 0., 0.])
@@ -134,7 +135,8 @@ class CrawlStanceController:
                              1.0 / self.z_error_constant * (state.robot_height - z)])
         
         delta_pos = velocity * self.time_step
-        delta_ori = rotz(-command.yaw_rate * self.time_step)
+        yaw_val = command.yaw_rate[2] if hasattr(command.yaw_rate, '__getitem__') else command.yaw_rate
+        delta_ori = rotz(-yaw_val * self.time_step)
 
         return delta_pos, delta_ori
 

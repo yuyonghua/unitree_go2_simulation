@@ -42,7 +42,7 @@ class DogOdometry(Node):
         if self.verbose:
             self.get_logger().info(f"Enable odom TF: {self.enable_odom_tf}")
 
-        self.declare_parameter('base_frame_id', 'base')
+        self.declare_parameter('base_frame_id', 'base_link')
         self.base_frame_id = self.get_parameter('base_frame_id').get_parameter_value().string_value
         if self.verbose:
             self.get_logger().info(f"Base frame ID: {self.base_frame_id}")

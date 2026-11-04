@@ -142,7 +142,7 @@
         </link>
 
 
-        <joint name="${name}_foot_joint" type="fixed">0
+        <joint name="${name}_foot_joint" type="fixed">
             <origin rpy="0 0 0" xyz="0 0 ${-(calf_length)}"/>
             <parent link="${name}_lower_leg_link"/>
             <child link="${name}_foot_link"/>
@@ -170,29 +170,6 @@
                     izz="${(2*foot_mass)/5.0*(foot_radius*foot_radius)}"/>             
             </inertial>
         </link>
-
-        <ros2_control name="${name}" type="system">
-            <hardware>
-                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-            </hardware>
-            <joint name="${name}_hip_joint">
-                <command_interface name="effort"/>
-                <state_interface name="position"/>
-                <state_interface name="velocity"/>
-            </joint>
-        
-            <joint name="${name}_upper_leg_joint">
-                <command_interface name="effort"/>
-                <state_interface name="position"/>
-                <state_interface name="velocity"/>
-            </joint>
-        
-            <joint name="${name}_lower_leg_joint">
-                <command_interface name="effort"/>
-                <state_interface name="position"/>
-                <state_interface name="velocity"/>
-            </joint>
-        </ros2_control> 
 
         <!-- <xacro:leg_transmission name="${name}"/> -->
 

@@ -3,7 +3,7 @@
 <package format="3">
   <name>go2_description</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Unitree Go2 robot description, 12-joint kinematics model, meshes and ros2_control configuration</description>
   <maintainer email="yyhstd@qq.com">user</maintainer>
   <license>BSD</license>
 
@@ -11,6 +11,7 @@
 
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
   <exec_depend>rviz2</exec_depend>
